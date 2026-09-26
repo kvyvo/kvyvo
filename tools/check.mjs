@@ -157,6 +157,24 @@ try {
     await ctx.close();
   }
   {
+    const ctx = await pw.context({ viewport: { width: 390, height: 664 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3, locale: 'ru-RU' });
+    const page = await ctx.newPage();
+    await page.goto(ROOT, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(500);
+    let still = true;
+    for (const y of [300, 900, 1800]) {
+      await page.evaluate((y) => scrollTo(0, y), y);
+      await page.waitForTimeout(250);
+      await page.setViewportSize({ width: 390, height: 740 });
+      await page.waitForTimeout(350);
+      await page.setViewportSize({ width: 390, height: 664 });
+      await page.waitForTimeout(350);
+      if (Math.abs(await page.evaluate(() => scrollY) - y) > 2) still = false;
+    }
+    ok(still, 'phone: browser bars showing and hiding never move the page');
+    await ctx.close();
+  }
+  {
     const { page, ctx, errors } = await open({ motion: 'reduce' });
     const hidden = await page.evaluate(() => [...document.querySelectorAll('.rv')].filter((e) => getComputedStyle(e).opacity !== '1').length);
     ok(hidden === 0, 'reduced motion: nothing waits to arrive');

@@ -9,6 +9,17 @@ const NEAR = 12;
 
 export function createPager({ screens, blocked = () => false }) {
   const root = document.documentElement;
+  if (matchMedia('(hover: none), (pointer: coarse)').matches) {
+    const toElement = (el) => scrollTo({ top: Math.max(0, el.getBoundingClientRect().top + scrollY - 72), behavior: reduced() ? 'auto' : 'smooth' });
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest?.('a[href^="#"]');
+      const el = a && a.hash.length > 1 && document.getElementById(decodeURIComponent(a.hash.slice(1)));
+      if (!el) return;
+      e.preventDefault();
+      toElement(el);
+    });
+    return { glide: (y) => scrollTo({ top: y, behavior: 'smooth' }), toElement, step() {}, get gliding() { return false; } };
+  }
   const maxY = () => root.scrollHeight - innerHeight;
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
@@ -125,10 +136,12 @@ export function createPager({ screens, blocked = () => false }) {
     history.replaceState(history.state, '', a.hash);
   });
 
-  let restT = 0, resizeT = 0, onTop = -1, keep = null;
+  let restT = 0, resizeT = 0, onTop = -1, keep = null, width = innerWidth;
   const remember = () => { const T = tops(), i = at(T, scrollY); onTop = Math.abs(T[i] - scrollY) <= EDGE ? i : -1; };
   addEventListener('scroll', () => { clearTimeout(restT); restT = setTimeout(() => { if (!anim && keep === null) remember(); }, 100); }, { passive: true });
   addEventListener('resize', () => {
+    if (innerWidth === width) return;
+    width = innerWidth;
     keep ??= anim ? at(tops(), anim.to) : onTop;
     clearTimeout(resizeT);
     resizeT = setTimeout(() => {
