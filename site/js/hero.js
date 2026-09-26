@@ -1,7 +1,3 @@
-// The hero picture borrows kalka's idea: a sheet lies on a screen, the screen glows through
-// the paper under one part at a time. Here the sheet has four parts: one per kind of work,
-// each shown by a real project.
-// Each part is a link to its project card.
 import { SPRING, fromApple } from './spring.js';
 import { Springs, swap, reduced } from './motion.js';
 import { t } from './i18n.js';
@@ -28,7 +24,6 @@ export const PROJECTS = [
   { id: 'books-scraper', short: 'hp3' },
 ];
 
-/* the four drawings, each in its own 260 × 185 part */
 function kalka(g) {
   el('rect', { class: 'h-ink', x: 52, y: 30, width: 156, height: 104, rx: 9 }, g);
   el('path', { class: 'h-ink', d: 'M36 142h188l-10 13H46z' }, g);
@@ -56,7 +51,6 @@ function nickcheck(g) {
 }
 
 function whoami(g) {
-  // the command goes out, the card comes back
   const pill = el('g', { transform: 'translate(176 22)' }, g);
   el('rect', { class: 'h-pill', width: 50, height: 22, rx: 11 }, pill);
   text(pill, 25, 15.5, '/me', 'h-mono h-pilltext', { 'text-anchor': 'middle' });
@@ -95,7 +89,6 @@ export function hero(svg, caption) {
   const COLS = 2, ROWS = 2, cw = sw / COLS, ch = sh / ROWS, PAD = 14, N = PROJECTS.length;
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
-  // the screen under the paper: seen faintly through the sheet, it lights one part
   const screen = el('rect', { class: 'h-screen', rx: 16, width: cw + 2 * PAD, height: ch + 2 * PAD }, svg);
   el('rect', { class: 'h-sheet', x: sx, y: sy, width: sw, height: sh, rx: 4 }, svg);
 
@@ -129,7 +122,6 @@ export function hero(svg, caption) {
     screen.style.opacity = 0.05 + 0.1 * glow;
     frame.setAttribute('x', x + 4); frame.setAttribute('y', y + 4);
   });
-  // each part: lit (1), traced and done (0.55, pencil grey) or waiting (0.22)
   const lit = new Springs(Object.fromEntries(parts.flatMap((_, n) => [[`o${n}`, n ? 0.22 : 1], [`c${n}`, 0]])), (v) => {
     parts.forEach((p, n) => { p.g.style.opacity = v[`o${n}`]; });
     checks.forEach((c, n) => {
@@ -154,21 +146,19 @@ export function hero(svg, caption) {
   if (caption) caption.textContent = t('heroPart', { name: PROJECTS[0].id, svc: t('sv0'), n: 1, N });
 
   const api = {
-    /** Language changed: redraw the words inside the picture. */
     relabel() {
       if (rowsText) rowsText.textContent = t('hRows');
       if (caption) caption.textContent = t('heroPart', { name: PROJECTS[cur].id, svc: t(`sv${cur}`), n: cur + 1, N });
     },
   };
 
-  if (reduced()) { // a still that tells the same story
+  if (reduced()) {
     focus(1, new Set([0]));
     lit.set({ c0: 1 });
     sp.set({ ...pos(1), glow: 1 });
     return api;
   }
 
-  // the loop: move → glow → check → next; hovering a part takes the frame there
   let n = 0, timer = 0, running = false, done = new Set(), hold = false;
   const step = () => {
     if (!running || hold) return;
@@ -181,7 +171,7 @@ export function hero(svg, caption) {
         timer = setTimeout(() => {
           n++;
           if (n < N) return step();
-          timer = setTimeout(() => { // all four seen: lift the checks and start again
+          timer = setTimeout(() => {
             lit.to(Object.fromEntries(checks.map((_, i) => [`c${i}`, 0])), SPRING.smooth);
             done = new Set();
             n = 0;

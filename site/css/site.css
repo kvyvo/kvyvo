@@ -1,6 +1,3 @@
-/* kvyvo — the kalka design system: warm grey canvas, black and white components,
-   one accent (red) for guides and "on", Geist, one icon stroke. Motion lives in JS springs;
-   CSS only uses the spring sampled into linear(). */
 :root {
   color-scheme: light;
   --canvas: #ECEAE4;
@@ -58,13 +55,11 @@ img { max-width: 100%; display: block; }
 .muted { color: var(--ink-2); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .sw-t { display: inline-block; }
-/* one icon language: 16 px grid, 1.6 stroke, round ends */
 .ic { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 kbd { font: 500 11px/1 var(--mono); padding: 4px 6px; border-radius: 6px; background: var(--fill-2); color: var(--ink-2); }
 ::selection { background: color-mix(in srgb, var(--accent) 22%, transparent); }
 
-/* ---------- island ---------- */
 #island {
   position: fixed; inset: auto; top: max(10px, env(safe-area-inset-top)); left: 50%; translate: -50% 0;
   margin: 0; padding: 0; border: 0; background: none; overflow: visible; max-width: none; max-height: none;
@@ -86,7 +81,6 @@ kbd { font: 500 11px/1 var(--mono); padding: 4px 6px; border-radius: 6px; backgr
 .nav-thumb { position: absolute; left: 0; top: 4px; height: 36px; border-radius: 999px; background: rgb(255 255 255 / .13); pointer-events: none; opacity: 0; }
 .isl-kbd { border: 0; cursor: pointer; margin: 0 6px 0 4px; background: rgb(255 255 255 / .12); color: rgb(255 255 255 / .7); }
 @media (pointer: coarse), (max-width: 480px) { .isl-kbd { display: none; } }
-/* what fits: on narrow screens only the current section keeps its label */
 @media (max-width: 620px) { .isl-idle a:not(.on) span { display: none; } .isl-idle a { padding: 0 12px; } }
 .ring { width: 18px; height: 18px; rotate: -90deg; }
 .ring circle { fill: none; stroke-width: 2.4; }
@@ -105,19 +99,17 @@ kbd { font: 500 11px/1 var(--mono); padding: 4px 6px; border-radius: 6px; backgr
 #palList li { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 12px; height: 42px; padding: 0 12px; border-radius: 12px; cursor: pointer; font-size: 14.5px; }
 #palList .empty { color: var(--ink-2); cursor: default; }
 
-/* ---------- top ---------- */
 .top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; height: 58px; padding: 0 max(18px, env(safe-area-inset-left)); background: color-mix(in srgb, var(--canvas) 86%, transparent); backdrop-filter: saturate(1.5) blur(16px); -webkit-backdrop-filter: saturate(1.5) blur(16px); border-bottom: 1px solid transparent; transition: border-color .3s; }
 .top { transition: translate var(--spring-dur) var(--spring), border-color .3s; }
 .top.gone { translate: 0 -100%; }
 .brand { display: flex; align-items: center; gap: 9px; text-decoration: none; font-weight: 600; font-size: 16px; letter-spacing: -.01em; }
-@media (max-width: 380px) { /* the island needs the room */
+@media (max-width: 380px) {
   .top { padding: 0 12px; }
 }
 .top-actions { display: flex; gap: 2px; }
 .plain { display: inline-flex; align-items: center; gap: 8px; min-height: var(--hit); min-width: var(--hit); justify-content: center; padding: 0 10px; border: 0; border-radius: 999px; background: none; color: var(--ink-2); cursor: pointer; text-decoration: none; font-size: 13.5px; font-weight: 500; transition: background-color .2s, color .2s, scale var(--spring-dur) var(--spring); }
 .plain:hover { background: var(--fill); color: var(--ink); }
 
-/* ---------- hero ---------- */
 .wrap { max-width: 1200px; margin: 0 auto; padding: 0 max(18px, env(safe-area-inset-left)); }
 .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 40px; align-items: center; min-height: calc(100svh - 58px); padding: 24px 0 48px; }
 @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 32px 0 48px; } }
@@ -130,7 +122,6 @@ h1 { font: 600 clamp(42px, 6.2vw, 80px)/.98 var(--font); letter-spacing: -.048em
 .hero-cap { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 6px 0 0; font: 500 12.5px var(--mono); color: var(--ink-2); }
 .hero-cap .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: none; }
 
-/* the picture: paper stays paper (white, black ink) in both themes, like kalka's light table */
 #heroSvg .h-screen { fill: #000; }
 #heroSvg .h-sheet { fill: #fff; fill-opacity: .84; stroke: rgb(0 0 0 / .08); }
 #heroSvg .h-grid line { stroke: var(--accent); stroke-width: 1; opacity: .55; }
@@ -167,7 +158,6 @@ h1 { font: 600 clamp(42px, 6.2vw, 80px)/.98 var(--font); letter-spacing: -.048em
 #heroSvg .h-head { fill: rgb(17 17 16 / .06); }
 #heroSvg .h-bar { fill: rgb(17 17 16 / .2); }
 
-/* ---------- buttons ---------- */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--hit); padding: 0 16px; border-radius: 999px; border: 0; cursor: pointer; font-weight: 500; font-size: 14px; white-space: nowrap; text-decoration: none; transition: scale var(--spring-dur) var(--spring), background-color .2s; }
 .btn:active, .chip:active, .plain:active { scale: .96; transition-duration: 90ms; }
 .btn.primary { background: var(--ink); color: var(--on-ink); }
@@ -179,14 +169,11 @@ h1 { font: 600 clamp(42px, 6.2vw, 80px)/.98 var(--font); letter-spacing: -.048em
 .chip { display: inline-flex; align-items: center; gap: 7px; min-height: 30px; padding: 0 12px; border-radius: 999px; background: var(--fill); font-size: 13px; font-weight: 500; color: var(--ink-2); white-space: nowrap; }
 .btnrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
-/* ---------- sections ---------- */
-/* one screen each: hero, 01, 02, 03, 03 more, 04. with a mouse or trackpad js/app.js pages between their tops;
-   on touch screens the browser snaps instead (the note at the top of js/pager.js says why). */
 .sec { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 80px 0 32px; }
 @media (hover: none) and (pointer: coarse) {
   html { scroll-snap-type: y mandatory; }
   .hero, .sec { scroll-snap-align: start; }
-  .hero { scroll-margin-top: 58px; } /* the header sits above it: its screen starts at the very top */
+  .hero { scroll-margin-top: 58px; }
 }
 .sec-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 40px; align-items: end; margin-bottom: 28px; }
 .sec-head .eyebrow { grid-column: 1 / -1; margin: 0; }
@@ -201,12 +188,10 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
 .card-head .chip { margin-left: auto; }
 .card h3 { font: 600 clamp(22px, 2.2vw, 28px)/1.12 var(--font); letter-spacing: -.03em; margin: 18px 0 10px; text-wrap: balance; }
 .card p { margin: 0; color: var(--ink-2); font-size: 15px; text-wrap: pretty; }
-/* facts are small pills: they wrap cleanly, no separator is left hanging at a line's end */
 .facts { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 0; padding: 0; list-style: none; font: 500 12px var(--mono); color: var(--ink-2); }
 .facts li { display: inline-flex; align-items: center; min-height: 26px; padding: 0 10px; border-radius: 999px; background: var(--fill); white-space: nowrap; }
 .card .btnrow { margin-top: 22px; }
 
-/* kalka: the big one */
 .feature { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.25fr); gap: 28px; align-items: center; padding: 28px; margin-bottom: 16px; }
 .feature h3 { font-size: clamp(28px, 3.2vw, 40px); letter-spacing: -.04em; margin-top: 22px; }
 .feature p { font-size: 16px; }
@@ -232,7 +217,6 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
 .proj { transition: box-shadow .3s, translate var(--spring-dur) var(--spring); }
 @media (hover: hover) { .proj:hover { translate: 0 -2px; box-shadow: var(--shadow-2); } }
 
-/* ---------- numbers ---------- */
 .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 48px 0 0; padding: 28px 0 0; border-top: 1px solid var(--line); }
 @media (max-width: 760px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 28px; } }
 .stats div { display: grid; gap: 6px; }
@@ -245,13 +229,10 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
 .foot a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .foot .links { display: flex; gap: 16px; }
 
-
-/* ---------- hero: who ---------- */
 .who { display: flex; align-items: center; gap: 14px; margin: 0 0 26px; }
 .ava { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 1px var(--line), var(--shadow); background: var(--well); }
 .who-t { display: grid; gap: 2px; }
 .who-t b { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
-/* ---------- about: bento ---------- */
 .bento { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
 .bento .card { display: flex; flex-direction: column; }
 .b-intro { grid-column: span 4; flex-direction: row !important; align-items: center; gap: 28px; padding: 28px; }
@@ -289,7 +270,6 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
   .ava.big { width: 96px; height: 96px; border-radius: 28px; }
 }
 
-/* ---------- services ---------- */
 .services { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
 .svc { grid-column: span 2; display: flex; flex-direction: column; }
 .svc:nth-child(n+4) { grid-column: span 3; }
@@ -305,33 +285,31 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
 @media (max-width: 960px) { .steps ol { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 480px) { .steps ol { grid-template-columns: minmax(0, 1fr); } }
 
-/* ---------- 03, more: the rest of the projects on a screen of their own ---------- */
 .sec-more > .eyebrow { margin: 0 0 22px; }
 #work .stats { margin-top: 32px; }
 
-/* ---------- ranteis: a plate in the service's own colours ----------
-   black in both themes, white type, the logo's pale gold used only inside the plate,
-   an orbit taken from the arc in the logo. */
-.ranteis, .b-ran { --gold: #FDE38E; }
+@font-face { font-family: "Jacobs"; src: url("../assets/fonts/jacobs-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Jacobs"; src: url("../assets/fonts/jacobs-500.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Jacobs"; src: url("../assets/fonts/jacobs-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+.ranteis, .b-ran { --gold: #FDE38E; font-family: "Jacobs", var(--font); }
+.ranteis .btn, .ranteis h3, .ranteis p, .ranteis li, .b-ran h3, .b-ran p, .b-ran .chip { font-family: inherit; }
 .ranteis {
   position: relative; isolation: isolate; overflow: hidden;
   display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); align-items: center; gap: 28px;
   padding: clamp(28px, 4vw, 48px); background: #000; color: #fff;
   box-shadow: 0 0 0 1px rgb(255 255 255 / .06), var(--shadow-2);
 }
-/* the service's own surface: its noise texture over the black, as on ranteis.one (loaded from there) */
 .ranteis::after, .b-ran::after {
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit;
   background: url("https://ranteis.one/_nuxt/images/textures/surface-noise.C2lZ40l3.webp") repeat center / 256px;
   opacity: .35; mix-blend-mode: screen;
 }
-/* the service's own surface: a pixel noise over the black, as on ranteis.one */
 .ranteis::after, .b-ran::after {
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit;
   background: url("../assets/ranteis-noise.png") repeat 0 0 / 96px; image-rendering: pixelated; opacity: .07;
 }
 .r-gold { color: var(--gold); }
-.ranteis::before { /* a warm glow behind the mark */
+.ranteis::before {
   content: ""; position: absolute; z-index: -1; right: -10%; top: 50%; width: 70%; aspect-ratio: 1; translate: 0 -50%;
   background: radial-gradient(closest-side, rgb(253 227 142 / .13), rgb(253 227 142 / .04) 55%, transparent);
 }
@@ -370,9 +348,7 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
   .ranteis .btnrow .btn { flex: 1 1 auto; }
 }
 
-/* the small tile in "about": same plate, lighter touch */
 .b-ran { position: relative; isolation: isolate; overflow: hidden; }
-/* a small system around the logo: two tilted orbits like the arc in the mark, satellites riding them */
 .r-sys { position: relative; width: 44px; height: 44px; }
 .r-sys .logo { position: relative; z-index: 1; }
 .r-sat { position: absolute; left: -88px; top: -24px; width: 220px; height: 90px; overflow: visible; pointer-events: none; }
@@ -388,9 +364,7 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
 .chip.on.gold { background: var(--gold); color: #000; }
 .chip.on.gold:hover { background: #FFEDB0; }
 
-/* ---------- contact: the black card ---------- */
 .contact { background: var(--island); color: #fff; padding: clamp(28px, 5vw, 56px); border-radius: 36px; }
-/* the last screen ends the page: the card in the middle, the footer at the bottom edge */
 #contact { padding-bottom: 0; }
 #contact > .contact { margin: auto 0; }
 #contact > .foot { margin-top: 28px; }
@@ -405,7 +379,6 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
 .btn.ghost { background: rgb(255 255 255 / .1); color: #fff; }
 .btn.ghost:hover { background: rgb(255 255 255 / .18); }
 
-/* ---------- short laptop screens (1280×800 and the like): a little less air, so each screen fits ---------- */
 @media (min-width: 761px) and (max-height: 860px) {
   .sec { padding: 72px 0 28px; }
   .sec-head { margin-bottom: 22px; }
@@ -413,15 +386,13 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
   .steps { margin-top: 22px; }
   #work .stats { margin-top: 24px; padding-top: 22px; }
   .feature { padding: 24px; }
-  .grid3 .well { display: none; } /* the three project cards keep their words, lose the terminal sample */
+  .grid3 .well { display: none; }
 }
 
-/* ---------- arrival: fade, rise, unblur (JS adds .in as things scroll in) ---------- */
 .js .rv { opacity: 0; translate: 0 18px; filter: blur(6px); }
 .js .rv.in { opacity: 1; translate: 0 0; filter: blur(0); transition: opacity .5s cubic-bezier(.2,.7,.3,1), filter .5s cubic-bezier(.2,.7,.3,1), translate 900ms var(--spring); transition-delay: var(--d, 0ms); }
 @media (prefers-reduced-motion: reduce) { .js .rv { opacity: 1; translate: none; filter: none; } }
 
-/* ---------- 404 ---------- */
 .nf { min-height: calc(100svh - 58px - 120px); display: grid; align-content: center; padding: 48px 0; }
 .nf .code { font: 600 clamp(96px, 18vw, 220px)/.85 var(--font); letter-spacing: -.07em; margin: 0 0 12px; color: var(--ink); }
 .nf .code i { font-style: normal; color: var(--accent); }

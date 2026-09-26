@@ -1,4 +1,3 @@
-// Shared by check.mjs and shots.mjs: a static server for site/ and a Chromium that gets its fonts.
 import { chromium } from 'playwright';
 import { spawn, execFileSync } from 'node:child_process';
 
@@ -13,8 +12,6 @@ export async function serve(port = 5174) {
   return { root, close: () => proc.kill() };
 }
 
-// Behind an HTTPS proxy (sandboxes) the browser may not trust the proxy's CA: fetch
-// Google Fonts with curl, which reads the system trust, and hand them to the page.
 const fontCache = new Map();
 async function fonts(ctx) {
   if (!process.env.HTTPS_PROXY) return;

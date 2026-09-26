@@ -1,13 +1,9 @@
-// The island from kalka, in a smaller role: one black shape at the top of the page.
-// Idle it is the section nav (01 02 03 04) and appears once the header has scrolled away; it becomes the
-// ⌘K palette and short toasts. It is a <dialog>: non-modal normally, modal for the palette.
 import { SPRING } from './spring.js';
 import { Springs, morph } from './motion.js';
 import { t } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
 
-/** Fuzzy match: letters in order, fewer gaps is better; null when it doesn't match. */
 function score(query, text) {
   const q = query.toLowerCase().replace(/\s+/g, ''), s = text.toLowerCase();
   if (!q) return 0;
@@ -36,7 +32,6 @@ export function createIsland({ commands }) {
   function idle() { modal(false); go('idle'); }
   dlg.addEventListener('cancel', (e) => { e.preventDefault(); idle(); });
   dlg.addEventListener('click', (e) => { if (e.target === dlg) idle(); });
-  /* ---------- sections: 01 02 03 04, a pill slides under the one in view ---------- */
   const nav = $('islIdle'), thumb = $('navThumb'), links = [...nav.querySelectorAll('a[data-sec]')];
   let current = null;
   const th = new Springs({ x: 0, w: 0, o: 0 }, ({ x, w, o }) => {
@@ -53,18 +48,16 @@ export function createIsland({ commands }) {
     if (id === current) return;
     current = id;
     links.forEach((l) => l.classList.toggle('on', l.dataset.sec === id));
-    if (m.state === 'idle') m.to('idle'); // labels that don't fit collapse to numbers: width follows
+    if (m.state === 'idle') m.to('idle');
     requestAnimationFrame(() => place());
   }
   new ResizeObserver(() => place(false)).observe(nav);
   $('paletteKey').addEventListener('click', () => palette());
-  /** At the top of the page the header is there; the island waits above the screen. */
   function hide(on) {
     away = on;
     dlg.classList.toggle('away', on && m.state === 'idle');
   }
 
-  /* ---------- toast ---------- */
   function toast(msg, ms = 1600) {
     if (m.state === 'palette') modal(false);
     $('toastText').textContent = msg;
@@ -74,7 +67,6 @@ export function createIsland({ commands }) {
   }
   $('islToast').addEventListener('click', idle);
 
-  /* ---------- ⌘K palette ---------- */
   const input = $('palInput'), list = $('palList'), hi = $('palHi');
   let items = [], sel = 0;
   const hiSp = new Springs({ y: 0, h: 0, o: 0 }, ({ y, h, o }) => {
@@ -99,7 +91,7 @@ export function createIsland({ commands }) {
       : `<li class="empty">${esc(t('cmdNothing'))}</li>`;
     input.setAttribute('aria-activedescendant', items.length ? `pal${sel}` : '');
     moveHi(false);
-    if (m.state === 'palette') m.to('palette'); // height follows the list
+    if (m.state === 'palette') m.to('palette');
   }
   function select(i) {
     sel = Math.max(0, Math.min(items.length - 1, i));

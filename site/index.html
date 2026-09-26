@@ -17,7 +17,6 @@
 <meta property="og:image" content="https://kvyvo.github.io/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <script>
-  // before first paint: pinned theme, and a flag that lets arrivals start hidden
   document.documentElement.classList.add('js');
   try { var m = localStorage.getItem('kvyvo.theme'); if (m === 'dark' || m === 'light') document.documentElement.dataset.theme = m; } catch (e) {}
 </script>
@@ -29,7 +28,6 @@
 </head>
 <body>
 
-<!-- the island: one shape for where-you-are, toasts and the command palette -->
 <dialog id="island" aria-label="kvyvo">
   <div class="isl" id="islShape">
     <nav class="isl-l isl-idle" id="islIdle" data-i18n-aria-label="navAria" aria-label="разделы">
@@ -190,7 +188,7 @@
         </div>
       </div>
       <figure class="shot">
-        <video src="assets/kalka.mp4" poster="assets/kalka-poster.jpg" width="1280" height="800" autoplay muted loop playsinline preload="metadata" data-i18n-aria-label="kAlt" aria-label="kalka: картинка, контур, лист, калибровка, план, световой стол, палитра"></video>
+        <video poster="assets/kalka-poster.jpg" width="1280" height="800" autoplay muted loop playsinline preload="metadata" data-i18n-aria-label="kAlt" aria-label="kalka в работе: картинка, контур, лист, калибровка, план, световой стол, палитра"><source src="assets/kalka.webm" type="video/webm"><source src="assets/kalka.mp4" type="video/mp4"></video>
       </figure>
     </article>
     <div class="stats rv">

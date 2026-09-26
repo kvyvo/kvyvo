@@ -1,4 +1,3 @@
-// kvyvo.github.io — one page, no build step. Same design system and motion as kalka.
 import { goLive, reduced } from './motion.js';
 import { t, apply, setLang, getLang, applyTheme, getTheme, nextTheme } from './i18n.js';
 import { createIsland } from './island.js';
@@ -15,7 +14,6 @@ apply();
 
 const pic = $('heroSvg') ? hero($('heroSvg'), $('heroCap')) : null;
 
-/* ---------- the island: section nav, ⌘k ---------- */
 const SECTIONS = [['about', 'islAbout'], ['services', 'islServices'], ['work', 'islWork'], ['contact', 'islContact']].filter(([id]) => $(id));
 const THEME_NEXT = { auto: 'dark', dark: 'light', light: 'auto' };
 const THEME_LABEL = { auto: 'themeAuto', dark: 'themeDark', light: 'themeLight' };
@@ -24,7 +22,7 @@ const open = (url) => { location.href = url; };
 const LINKS = { telegram: 'https://t.me/kvyvo', instagram: 'https://www.instagram.com/kvyvo_', ranteis: 'https://ranteis.one' };
 
 async function copyDiscord() {
-  try { await navigator.clipboard.writeText('kvyvo.'); } catch { /* no clipboard: the handle is on screen anyway */ }
+  try { await navigator.clipboard.writeText('kvyvo.'); } catch {  }
   return t('copied');
 }
 
@@ -43,8 +41,6 @@ const commands = () => [
 const island = createIsland({ commands });
 $('paletteKey').textContent = MAC ? '⌘k' : 'ctrl k';
 
-// the header lives at the top; scroll down and it slides away, the section nav takes its place.
-// the section in view is the last one whose top has passed 45% of the screen; at the very bottom it's the last one.
 let rafScroll = 0;
 const top = document.querySelector('.top');
 const onScroll = () => {
@@ -60,13 +56,11 @@ const onScroll = () => {
 };
 addEventListener('scroll', () => { rafScroll ||= requestAnimationFrame(onScroll); }, { passive: true });
 
-// one screen per gesture: hero, 01, 02, 03, 03 more, 03 vpn, 04 (js/pager.js). the palette and fields keep their keys and wheel.
 const SCREENS = ['about', 'services', 'work', 'work-more', 'work-vpn', 'contact'].map($).filter(Boolean);
 const pager = createPager({
   screens: () => [0, ...SCREENS.map((el) => el.getBoundingClientRect().top + scrollY)],
   blocked: (e) => island.state === 'palette' || !!e.target.closest?.('input, textarea, select, [contenteditable]:not([contenteditable=false])'),
 });
-// the open palette holds the page still: its list scrolls, what's behind it doesn't
 addEventListener('wheel', (e) => { if (island.state === 'palette' && !e.target.closest?.('#palList')) e.preventDefault(); }, { passive: false });
 addEventListener('keydown', (e) => { if (island.state === 'palette' && (e.key === 'PageDown' || e.key === 'PageUp')) e.preventDefault(); });
 onScroll();
@@ -75,7 +69,6 @@ addEventListener('keydown', (e) => {
   if ((e.metaKey || e.ctrlKey) && e.code === 'KeyK') { e.preventDefault(); island.state === 'palette' ? island.idle() : island.palette(); }
 });
 
-/* ---------- language ---------- */
 function switchLang() {
   setLang(getLang() === 'ru' ? 'en' : 'ru');
   pic?.relabel();
@@ -83,7 +76,6 @@ function switchLang() {
 $('langBtn').addEventListener('click', () => { switchLang(); island.toast(t('toastLang')); });
 document.querySelectorAll('[data-copy=discord]').forEach((b) => b.addEventListener('click', async () => island.toast(await copyDiscord())));
 
-/* ---------- things arrive as they scroll in: fade, rise, unblur ---------- */
 const rv = [...document.querySelectorAll('.rv')];
 if ('IntersectionObserver' in window && !reduced()) {
   const io = new IntersectionObserver((entries) => {
@@ -92,5 +84,4 @@ if ('IntersectionObserver' in window && !reduced()) {
   rv.forEach((el) => io.observe(el));
 } else rv.forEach((el) => el.classList.add('in'));
 
-// nothing animates until the first screen is on
 requestAnimationFrame(() => requestAnimationFrame(goLive));

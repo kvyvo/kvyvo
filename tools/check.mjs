@@ -1,6 +1,3 @@
-// Opens the site in Chromium and checks what a visitor would notice: script errors,
-// broken links to local files, horizontal scroll on a phone, the ⌘K palette, the language
-// switch, the 404 page. SHOTS=dir also saves screenshots of each state for a look.
 import { mkdir } from 'node:fs/promises';
 import { serve, launch, SITE as site } from './browser.mjs';
 
@@ -24,20 +21,17 @@ async function open({ path = '/', width = 1440, height = 900, scheme = 'light', 
   return { page, ctx, errors };
 }
 const snap = async (page, name, opts = {}) => shots && page.screenshot({ path: `${shots}/${name}.png`, ...opts });
-// the page turns one screen per gesture (js/pager.js): wheel, wait for the glide and for the wheel to go quiet
 const SCREENS = ['top', 'about', 'services', 'work', 'work-more', 'work-vpn', 'contact'];
 const screenTops = (page) => page.evaluate((ids) => ids.map((id) => Math.min(document.documentElement.scrollHeight - innerHeight, id === 'top' ? 0 : document.getElementById(id).getBoundingClientRect().top + scrollY)), SCREENS);
 const y = (page) => page.evaluate(() => scrollY);
 const nav = (page) => page.getAttribute('#islIdle a.on', 'data-sec');
 async function wheelDown(page, dy = 400, { settle = 900 } = {}) { await page.mouse.wheel(0, dy); await page.waitForTimeout(settle); }
-// a trackpad flick: a quick ramp, then a second and more of inertia that slowly dies out
 async function flick(page, dir = 1) {
   const ds = [3, 8, 18, 34, 52];
   for (let v = 60; v >= 1; v *= 0.94) ds.push(Math.round(v));
   for (const d of ds) { await page.mouse.wheel(0, d * dir); await page.waitForTimeout(16); }
   await page.waitForTimeout(900);
 }
-// every gesture until the page stops moving; returns how many it took
 async function walk(page, { dy = 400, settle = 900, max = 60 } = {}) {
   let n = 0, before;
   do { before = await y(page); await wheelDown(page, dy, { settle }); n++; } while (Math.abs(await y(page) - before) > 1 && n < max);
@@ -45,7 +39,6 @@ async function walk(page, { dy = 400, settle = 900, max = 60 } = {}) {
 }
 
 try {
-  // desktop, light, Russian
   {
     const { page, ctx, errors } = await open();
     ok(await page.title() === 'kvyvo — боты, парсеры и сайты', 'title in Russian');
@@ -55,7 +48,6 @@ try {
     ok(caps.length === 0, `all copy is lowercase${caps.length ? ': ' + caps.join(' | ') : ''}`);
     ok(await page.locator('img.ava').first().evaluate((i) => i.complete && i.naturalWidth > 0), 'avatar loads');
     await snap(page, 'desktop-light');
-    // screen by screen: one gesture, one screen, landing exactly on its top
     await page.mouse.move(720, 450);
     const tops = await screenTops(page);
     ok(tops.every((t, i) => !i || t - tops[i - 1] === 900), `each screen fits 1440×900 (${tops.map((t, i) => i && t - tops[i - 1]).slice(1).join(', ')})`);
@@ -102,7 +94,6 @@ try {
     await page.waitForTimeout(900);
     await page.keyboard.press('Home');
     await page.waitForTimeout(900);
-    // walk down so every arrival plays, then a full page
     await walk(page);
     ok(await page.locator('.rv:not(.in)').count() === 0, 'everything arrived after scrolling');
     ok((await page.getAttribute('#islIdle a.on', 'data-sec')) === 'contact', 'nav marks the section in view');
@@ -110,7 +101,6 @@ try {
     await snap(page, 'desktop-light-full', { fullPage: true });
     await page.evaluate(() => scrollTo(0, 0));
     await page.waitForTimeout(600);
-    // ⌘K palette
     await page.keyboard.press('Control+KeyK');
     await page.waitForTimeout(500);
     ok(await page.locator('#islShape').getAttribute('data-state') === 'palette', 'Ctrl K opens the palette');
@@ -121,7 +111,6 @@ try {
     await page.keyboard.press('Escape');
     await page.waitForTimeout(500);
     ok(await page.locator('#islShape').getAttribute('data-state') === 'idle', 'Esc closes the palette');
-    // language
     await page.click('#langBtn');
     await page.waitForTimeout(700);
     ok(await page.locator('html').getAttribute('lang') === 'en', 'language button switches to English');
@@ -132,7 +121,6 @@ try {
     ok(errors.length === 0, `no errors on the page${errors.length ? ': ' + errors.join(' | ') : ''}`);
     await ctx.close();
   }
-  // desktop, dark, English
   {
     const { page, ctx, errors } = await open({ scheme: 'dark', lang: 'en' });
     ok(await page.locator('html').getAttribute('lang') === 'en', 'English browser gets English');
@@ -141,12 +129,11 @@ try {
     await snap(page, 'desktop-dark');
     await page.locator('#p-kalka').scrollIntoViewIfNeeded();
     await page.waitForTimeout(1200);
-    ok(await page.locator('.shot-dark').isVisible() && !(await page.locator('.shot-light').isVisible()), 'dark screenshot of kalka in dark mode');
+    ok(await page.locator('.shot video').evaluate((v) => v.readyState >= 1 && v.muted && v.loop), 'kalka video loads, muted and looping');
     await snap(page, 'desktop-dark-full', { fullPage: true });
     ok(errors.length === 0, `no errors in dark${errors.length ? ': ' + errors.join(' | ') : ''}`);
     await ctx.close();
   }
-  // phone
   for (const width of [320, 390]) {
     const { page, ctx, errors } = await open({ width, height: 844 });
     const over = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
@@ -160,7 +147,6 @@ try {
     await page.waitForTimeout(700);
     await snap(page, `phone-${width}`);
     if (width === 390) {
-      // screens taller than the phone scroll inside, then the page turns: all the way down
       const n = await walk(page, { dy: 500, settle: 450 });
       const end = await page.evaluate(() => scrollY + innerHeight >= document.documentElement.scrollHeight - 2);
       ok(end, `phone: the wheel reaches the bottom through tall screens (${n} gestures)`);
@@ -170,7 +156,6 @@ try {
     ok(errors.length === 0, `no errors at ${width}px${errors.length ? ': ' + errors.join(' | ') : ''}`);
     await ctx.close();
   }
-  // reduced motion: a still picture, nothing hidden
   {
     const { page, ctx, errors } = await open({ motion: 'reduce' });
     const hidden = await page.evaluate(() => [...document.querySelectorAll('.rv')].filter((e) => getComputedStyle(e).opacity !== '1').length);
@@ -178,7 +163,6 @@ try {
     ok(errors.length === 0, `no errors with reduced motion${errors.length ? ': ' + errors.join(' | ') : ''}`);
     await ctx.close();
   }
-  // 404 at a nested path: absolute URLs must still load
   {
     const ctx = await pw.context({ viewport: { width: 1280, height: 800 }, deviceScaleFactor: 2 });
     const page = await ctx.newPage();

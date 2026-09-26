@@ -1,5 +1,3 @@
-// two languages, like kalka. russian first; the choice is remembered per browser.
-// all copy is lowercase on purpose.
 const RU = {
   title: 'kvyvo — боты, парсеры и сайты',
   description: 'kvyvo: боты на python, скрипты и парсеры, сайты на html, css и react, дизайн. самозанятый, беру заказы. co-owner ranteis network.',
@@ -240,7 +238,7 @@ const EN = {
 
 const DICT = { ru: RU, en: EN };
 const read = (k) => { try { return localStorage.getItem(k); } catch { return null; } };
-const write = (k, v) => { try { localStorage.setItem(k, v); } catch { /* private mode: fine */ } };
+const write = (k, v) => { try { localStorage.setItem(k, v); } catch {  } };
 
 const fromBrowser = () => (/^(ru|uk|be|kk)\b/i.test(navigator.language || '') ? 'ru' : 'en');
 let lang = DICT[read('kvyvo.lang')] ? read('kvyvo.lang') : fromBrowser();
@@ -251,7 +249,6 @@ export function t(key, vars = {}) {
   return s.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? '');
 }
 
-/** Fill every [data-i18n] node and [data-i18n-*] attribute on the page. */
 export function apply(root = document) {
   document.documentElement.lang = lang;
   root.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
@@ -268,7 +265,6 @@ export function setLang(next) {
   apply();
 }
 
-/* theme: system by default; the palette can pin light or dark */
 const THEMES = ['auto', 'dark', 'light'];
 export const getTheme = () => (THEMES.includes(read('kvyvo.theme')) ? read('kvyvo.theme') : 'auto');
 export function applyTheme(mode = getTheme()) {

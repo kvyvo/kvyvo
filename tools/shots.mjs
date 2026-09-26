@@ -1,11 +1,8 @@
-// Pictures taken from the real page: the README hero (light and dark) and the social preview.
-// The hero picture is shot with Reduce Motion on, so it's the still frame, not a random moment.
 import { serve, launch } from './browser.mjs';
 
 const out = (f) => new URL(`../${f}`, import.meta.url).pathname;
 const server = await serve(5176);
 const pw = await launch();
-// the palette key reads ⌘K on a Mac, as most visitors will see it
 const MAC_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36';
 
 async function shot({ file, width, height, scheme = 'light', clip = 'hero' }) {

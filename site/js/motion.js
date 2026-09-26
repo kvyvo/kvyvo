@@ -1,18 +1,12 @@
-// Motion toolkit, the same one kvyvo/kalka runs on. Everything moves on closed-form springs:
-//  • Springs — several numbers on springs, one rAF, interruptible (keeps velocity)
-//  • swap — text changes with a short blur, old copy leaves, new one arrives
-//  • morph — one shape moving between states: size, radius and colour spring, content swaps with blur
 import { spring, settleTime, SPRING } from './spring.js';
 
 const mq = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
 export const reduced = () => mq.matches;
-// Nothing animates until the first screen is on: the page shouldn't rearrange itself on load.
 let live = false;
 export const goLive = () => { live = true; };
 const now = () => performance.now() / 1000;
 const isPreset = (o) => o && typeof o.stiffness === 'number';
 
-/** CSS linear() easing sampled from a spring, with its duration. Cached per preset. */
 const easings = new Map();
 export function easing(preset = SPRING.snappy) {
   const key = `${preset.stiffness}|${preset.damping}`;
@@ -24,10 +18,6 @@ export function easing(preset = SPRING.snappy) {
   return easings.get(key);
 }
 
-/**
- * Named numbers on springs. `to()` starts a new spring for each key from its current
- * value and velocity, so interrupting never jumps. `onFrame(values)` runs once per frame.
- */
 export class Springs {
   constructor(values, onFrame) {
     this.k = {};
@@ -62,7 +52,6 @@ export class Springs {
     reduced() ? this.now() : this.kick();
     return this;
   }
-  /** Jump without animation: applied at once. */
   set(values) {
     for (const [key, v] of Object.entries(values)) this.k[key] = { from: v, to: v, t0: 0, p: null, T: 0 };
     this.now();
@@ -80,10 +69,6 @@ export class Springs {
   }
 }
 
-/**
- * Swap an element's text with a short blur: a ghost of the old text leaves, the new one arrives.
- * The element's own text changes at once (screen readers read the new value).
- */
 export function swap(el, text, dir = 1) {
   text = String(text);
   if (el.textContent === text) return;
@@ -112,7 +97,6 @@ export function swap(el, text, dir = 1) {
   ], { duration: e.duration, easing: e.easing, delay: 50, fill: 'backwards' });
 }
 
-/** Fade + blur one layer out and another in, used by morph(). */
 function crossfade(from, to) {
   if (from && from !== to) {
     from.setAttribute('inert', '');
@@ -132,7 +116,6 @@ function crossfade(from, to) {
   }
 }
 
-/** Any CSS colour → [r, g, b], resolved by the browser itself. */
 let probe = null;
 function rgb(color) {
   if (!probe) { probe = document.createElement('i'); probe.style.display = 'none'; document.body.append(probe); }
@@ -141,10 +124,6 @@ function rgb(color) {
   return (getComputedStyle(probe).color.match(/[\d.]+/g) || [0, 0, 0]).slice(0, 3).map(Number);
 }
 
-/**
- * One shape, many states. The shape's width, height, radius and colour spring to the
- * state's layer; the layers swap with a blur. States: { name: { layer, radius?, light?, width? } }.
- */
 export function morph(shape, states, { dark = '--island', light = '--surface' } = {}) {
   let cur = null;
   const layers = Object.values(states).map((s) => s.layer);
@@ -169,7 +148,6 @@ export function morph(shape, states, { dark = '--island', light = '--surface' } 
   }
   const api = {
     get state() { return cur; },
-    /** Go to a state (or re-measure the current one after its content changed). */
     to(name, preset = { w: SPRING.snappy, h: SPRING.snappy, r: SPRING.snappy, light: SPRING.ui }) {
       const st = states[name], prev = cur && states[cur];
       pal = colours();
@@ -183,7 +161,6 @@ export function morph(shape, states, { dark = '--island', light = '--surface' } 
       return api;
     },
   };
-  // content can change size on its own (web font arrives, language switch): follow it
   const ro = new ResizeObserver((entries) => {
     if (cur && entries.some((e) => e.target === states[cur].layer)) api.to(cur);
   });
