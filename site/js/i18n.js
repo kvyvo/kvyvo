@@ -44,6 +44,7 @@ const RU = {
   st1: 'пишешь в telegram', st2: 'обсуждаем задачу, срок и цену', st3: 'делаю', st4: 'сдаю результат и чек',
 
   secWork: '03 — проекты',
+  secWorkMore: '03 — проекты, ещё',
   workTitle: 'что сделано',
   workLead: 'открытый код. каждый проект решает одну задачу до конца: с тестами и без лишних зависимостей.',
   kTag: 'веб · pwa',
@@ -157,6 +158,7 @@ const EN = {
   st1: 'you message me on telegram', st2: 'we agree on the task, deadline and price', st3: 'i build it', st4: 'i hand over the result and a receipt',
 
   secWork: '03 — work',
+  secWorkMore: '03 — work, more',
   workTitle: 'what’s built',
   workLead: 'open source. each project does one job all the way: with tests and no dependencies it can live without.',
   kTag: 'web · pwa',

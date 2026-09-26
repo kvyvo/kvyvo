@@ -118,7 +118,7 @@ kbd { font: 500 11px/1 var(--mono); padding: 4px 6px; border-radius: 6px; backgr
 .plain:hover { background: var(--fill); color: var(--ink); }
 
 /* ---------- hero ---------- */
-.wrap { max-width: 1200px; margin: 0 auto; padding: 0 max(18px, env(safe-area-inset-left)) 56px; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 max(18px, env(safe-area-inset-left)); }
 .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 40px; align-items: center; min-height: calc(100svh - 58px); padding: 24px 0 48px; }
 @media (max-width: 900px) { .hero { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 32px 0 48px; } }
 .eyebrow { margin: 0 0 18px; font: 500 12.5px/1 var(--mono); letter-spacing: .02em; color: var(--ink-2); }
@@ -180,8 +180,14 @@ h1 { font: 600 clamp(42px, 6.2vw, 80px)/.98 var(--font); letter-spacing: -.048em
 .btnrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
 /* ---------- sections ---------- */
-/* one section per screen: scroll, 01; scroll, 02… (js/app.js settles the page on a section's start) */
-.sec { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 88px 0 48px; }
+/* one screen each: hero, 01, 02, 03, 03 more, 04. with a mouse or trackpad js/app.js pages between their tops;
+   on touch screens the browser snaps instead (the note at the top of js/pager.js says why). */
+.sec { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 80px 0 32px; }
+@media (hover: none) and (pointer: coarse) {
+  html { scroll-snap-type: y mandatory; }
+  .hero, .sec { scroll-snap-align: start; }
+  .hero { scroll-margin-top: 58px; } /* the header sits above it: its screen starts at the very top */
+}
 .sec-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 40px; align-items: end; margin-bottom: 28px; }
 .sec-head .eyebrow { grid-column: 1 / -1; margin: 0; }
 h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; margin: 0; text-wrap: balance; }
@@ -234,7 +240,7 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
 .stats b i { font-style: normal; color: var(--accent); }
 .stats span { color: var(--ink-2); font-size: 14px; }
 
-.foot { display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: space-between; align-items: center; padding: 28px 0 0; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-2); }
+.foot { display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: space-between; align-items: center; padding: 24px 0 max(24px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-2); }
 .foot a { text-decoration: none; color: var(--ink); font-weight: 500; }
 .foot a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .foot .links { display: flex; gap: 16px; }
@@ -299,12 +305,20 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
 @media (max-width: 960px) { .steps ol { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 480px) { .steps ol { grid-template-columns: minmax(0, 1fr); } }
 
+/* ---------- 03, more: the rest of the projects on a screen of their own ---------- */
+.sec-more > .eyebrow { margin: 0 0 22px; }
+#work .stats { margin-top: 32px; }
+
 /* ---------- ranteis ---------- */
 .ranteis { margin-top: 16px; padding: 28px; }
 .ranteis h3 { font-size: clamp(24px, 2.6vw, 32px); }
 
 /* ---------- contact: the black card ---------- */
 .contact { background: var(--island); color: #fff; padding: clamp(28px, 5vw, 56px); border-radius: 36px; }
+/* the last screen ends the page: the card in the middle, the footer at the bottom edge */
+#contact { padding-bottom: 0; }
+#contact > .contact { margin: auto 0; }
+#contact > .foot { margin-top: 28px; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .contact { box-shadow: 0 0 0 1px rgb(255 255 255 / .1); } }
 :root[data-theme="dark"] .contact { box-shadow: 0 0 0 1px rgb(255 255 255 / .1); }
 .contact .eyebrow, .contact .sec-lead { color: rgb(255 255 255 / .6); }
@@ -315,6 +329,17 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
 .btn.light:hover { background: #ECEAE4; }
 .btn.ghost { background: rgb(255 255 255 / .1); color: #fff; }
 .btn.ghost:hover { background: rgb(255 255 255 / .18); }
+
+/* ---------- short laptop screens (1280×800 and the like): a little less air, so each screen fits ---------- */
+@media (min-width: 761px) and (max-height: 860px) {
+  .sec { padding: 72px 0 28px; }
+  .sec-head { margin-bottom: 22px; }
+  h2 { font-size: clamp(34px, min(4.6vw, 6.4vh), 56px); }
+  .steps { margin-top: 22px; }
+  #work .stats { margin-top: 24px; padding-top: 22px; }
+  .feature { padding: 24px; }
+  .grid3 .well { display: none; } /* the three project cards keep their words, lose the terminal sample */
+}
 
 /* ---------- arrival: fade, rise, unblur (JS adds .in as things scroll in) ---------- */
 .js .rv { opacity: 0; translate: 0 18px; filter: blur(6px); }

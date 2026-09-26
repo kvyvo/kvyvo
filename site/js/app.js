@@ -3,6 +3,7 @@ import { goLive, reduced } from './motion.js';
 import { t, apply, setLang, getLang, applyTheme, getTheme, nextTheme } from './i18n.js';
 import { createIsland } from './island.js';
 import { hero, PROJECTS } from './hero.js';
+import { createPager } from './pager.js';
 
 const $ = (id) => document.getElementById(id);
 const GH = 'https://github.com/kvyvo';
@@ -18,7 +19,7 @@ const pic = $('heroSvg') ? hero($('heroSvg'), $('heroCap')) : null;
 const SECTIONS = [['about', 'islAbout'], ['services', 'islServices'], ['work', 'islWork'], ['contact', 'islContact']].filter(([id]) => $(id));
 const THEME_NEXT = { auto: 'dark', dark: 'light', light: 'auto' };
 const THEME_LABEL = { auto: 'themeAuto', dark: 'themeDark', light: 'themeLight' };
-const jump = (id) => $(id)?.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth' });
+const jump = (id) => { if ($(id)) pager.toElement($(id)); };
 const open = (url) => { location.href = url; };
 const LINKS = { telegram: 'https://t.me/kvyvo', instagram: 'https://www.instagram.com/kvyvo_', ranteis: 'https://ranteis.one' };
 
@@ -59,23 +60,15 @@ const onScroll = () => {
 };
 addEventListener('scroll', () => { rafScroll ||= requestAnimationFrame(onScroll); }, { passive: true });
 
-// one section per screen. css scroll-snap pulls a gentle wheel or trackpad scroll back where it started,
-// so the page settles itself: when scrolling stops near a section's start, it glides the rest of the way.
-// inside a section taller than the screen nothing happens.
-if (SECTIONS.length) {
-  const stops = () => [0, ...SECTIONS.map(([id]) => $(id).getBoundingClientRect().top + scrollY)];
-  let idle = 0, settling = false;
-  const settle = () => {
-    if (settling) { settling = false; return; }
-    if (island.state === 'palette') return;
-    const near = stops().map((y) => y - scrollY).filter((d) => Math.abs(d) > 2 && Math.abs(d) < innerHeight * 0.22);
-    if (!near.length) return;
-    const d = near.sort((a, b) => Math.abs(a) - Math.abs(b))[0];
-    settling = true;
-    scrollBy({ top: d, behavior: reduced() ? 'auto' : 'smooth' });
-  };
-  addEventListener('scroll', () => { clearTimeout(idle); idle = setTimeout(settle, 160); }, { passive: true });
-}
+// one screen per gesture: hero, 01, 02, 03, 03 more, 04 (js/pager.js). the palette and fields keep their keys and wheel.
+const SCREENS = ['about', 'services', 'work', 'work-more', 'contact'].map($).filter(Boolean);
+const pager = createPager({
+  screens: () => [0, ...SCREENS.map((el) => el.getBoundingClientRect().top + scrollY)],
+  blocked: (e) => island.state === 'palette' || !!e.target.closest?.('input, textarea, select, [contenteditable]:not([contenteditable=false])'),
+});
+// the open palette holds the page still: its list scrolls, what's behind it doesn't
+addEventListener('wheel', (e) => { if (island.state === 'palette' && !e.target.closest?.('#palList')) e.preventDefault(); }, { passive: false });
+addEventListener('keydown', (e) => { if (island.state === 'palette' && (e.key === 'PageDown' || e.key === 'PageUp')) e.preventDefault(); });
 onScroll();
 
 addEventListener('keydown', (e) => {

@@ -24,6 +24,25 @@ async function open({ path = '/', width = 1440, height = 900, scheme = 'light', 
   return { page, ctx, errors };
 }
 const snap = async (page, name, opts = {}) => shots && page.screenshot({ path: `${shots}/${name}.png`, ...opts });
+// the page turns one screen per gesture (js/pager.js): wheel, wait for the glide and for the wheel to go quiet
+const SCREENS = ['top', 'about', 'services', 'work', 'work-more', 'contact'];
+const screenTops = (page) => page.evaluate((ids) => ids.map((id) => Math.min(document.documentElement.scrollHeight - innerHeight, id === 'top' ? 0 : document.getElementById(id).getBoundingClientRect().top + scrollY)), SCREENS);
+const y = (page) => page.evaluate(() => scrollY);
+const nav = (page) => page.getAttribute('#islIdle a.on', 'data-sec');
+async function wheelDown(page, dy = 400, { settle = 900 } = {}) { await page.mouse.wheel(0, dy); await page.waitForTimeout(settle); }
+// a trackpad flick: a quick ramp, then a second and more of inertia that slowly dies out
+async function flick(page, dir = 1) {
+  const ds = [3, 8, 18, 34, 52];
+  for (let v = 60; v >= 1; v *= 0.94) ds.push(Math.round(v));
+  for (const d of ds) { await page.mouse.wheel(0, d * dir); await page.waitForTimeout(16); }
+  await page.waitForTimeout(900);
+}
+// every gesture until the page stops moving; returns how many it took
+async function walk(page, { dy = 400, settle = 900, max = 60 } = {}) {
+  let n = 0, before;
+  do { before = await y(page); await wheelDown(page, dy, { settle }); n++; } while (Math.abs(await y(page) - before) > 1 && n < max);
+  return n;
+}
 
 try {
   // desktop, light, Russian
@@ -36,9 +55,52 @@ try {
     ok(caps.length === 0, `all copy is lowercase${caps.length ? ': ' + caps.join(' | ') : ''}`);
     ok(await page.locator('img.ava').first().evaluate((i) => i.complete && i.naturalWidth > 0), 'avatar loads');
     await snap(page, 'desktop-light');
-    // walk down so every arrival plays, then a full page
-    for (let y = 0; y < 5000; y += 400) { await page.mouse.wheel(0, 400); await page.waitForTimeout(120); }
+    // screen by screen: one gesture, one screen, landing exactly on its top
+    await page.mouse.move(720, 450);
+    const tops = await screenTops(page);
+    ok(tops.every((t, i) => !i || t - tops[i - 1] === 900), `each screen fits 1440×900 (${tops.map((t, i) => i && t - tops[i - 1]).slice(1).join(', ')})`);
+    await wheelDown(page, 100);
+    ok(Math.abs(await y(page) - tops[1]) <= 2, `one wheel notch: hero → 01, on its top (${await y(page)} vs ${tops[1]})`);
+    await flick(page);
+    ok(Math.abs(await y(page) - tops[2]) <= 2, `one long trackpad flick with inertia: exactly one screen, 01 → 02 (${await y(page)} vs ${tops[2]})`);
+    await flick(page);
+    ok(Math.abs(await y(page) - tops[3]) <= 2 && await nav(page) === 'work', `next flick: 03, nav marks 03 (${await y(page)}, ${await nav(page)})`);
+    await page.keyboard.press('PageDown');
     await page.waitForTimeout(900);
+    ok(Math.abs(await y(page) - tops[4]) <= 2 && await nav(page) === 'work', `page down: 03 more, nav still marks 03 (${await y(page)}, ${await nav(page)})`);
+    await page.keyboard.press('ArrowDown');
+    await page.waitForTimeout(900);
+    ok(Math.abs(await y(page) - tops[5]) <= 2 && await nav(page) === 'contact', `arrow down: 04 (${await y(page)}, ${await nav(page)})`);
+    await wheelDown(page, 400);
+    ok(Math.abs(await y(page) - tops[5]) <= 2, 'at the last screen a wheel goes nowhere');
+    await flick(page, -1);
+    ok(Math.abs(await y(page) - tops[4]) <= 2, `flick up: back one screen (${await y(page)} vs ${tops[4]})`);
+    await page.keyboard.press('Shift+Space');
+    await page.waitForTimeout(900);
+    ok(Math.abs(await y(page) - tops[3]) <= 2, 'shift space: back one more');
+    await page.keyboard.press('Home');
+    await page.waitForTimeout(900);
+    ok(await y(page) <= 2, 'home: back to the top');
+    await page.click('.hero-cta a[href="#services"]');
+    await page.waitForTimeout(900);
+    ok(Math.abs(await y(page) - tops[2]) <= 2, 'hero button glides to 02');
+    await page.click('#islIdle a[data-sec=work]');
+    await page.waitForTimeout(900);
+    ok(Math.abs(await y(page) - tops[3]) <= 2, 'nav link glides to 03');
+    await page.keyboard.press('Control+KeyK');
+    await page.waitForTimeout(400);
+    await page.mouse.wheel(0, 400);
+    await page.keyboard.press('PageDown');
+    await page.waitForTimeout(700);
+    ok(Math.abs(await y(page) - tops[3]) <= 2, 'with the palette open the page stays put');
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(400);
+    await page.keyboard.press('End');
+    await page.waitForTimeout(900);
+    await page.keyboard.press('Home');
+    await page.waitForTimeout(900);
+    // walk down so every arrival plays, then a full page
+    await walk(page);
     ok(await page.locator('.rv:not(.in)').count() === 0, 'everything arrived after scrolling');
     ok((await page.getAttribute('#islIdle a.on', 'data-sec')) === 'contact', 'nav marks the section in view');
     ok(await page.evaluate(() => document.querySelector('.top').classList.contains('gone') && !document.getElementById('island').classList.contains('away')), 'scrolled down: header gone, nav shown');
@@ -95,8 +157,11 @@ try {
     await page.waitForTimeout(700);
     await snap(page, `phone-${width}`);
     if (width === 390) {
-      for (let y = 0; y < 9000; y += 500) { await page.mouse.wheel(0, 500); await page.waitForTimeout(100); }
-      await page.waitForTimeout(900);
+      // screens taller than the phone scroll inside, then the page turns: all the way down
+      const n = await walk(page, { dy: 500, settle: 450 });
+      const end = await page.evaluate(() => scrollY + innerHeight >= document.documentElement.scrollHeight - 2);
+      ok(end, `phone: the wheel reaches the bottom through tall screens (${n} gestures)`);
+      ok((await nav(page)) === 'contact', 'phone: nav marks 04 at the bottom');
       await snap(page, 'phone-390-full', { fullPage: true });
     }
     ok(errors.length === 0, `no errors at ${width}px${errors.length ? ': ' + errors.join(' | ') : ''}`);
