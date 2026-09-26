@@ -60,8 +60,8 @@ const onScroll = () => {
 };
 addEventListener('scroll', () => { rafScroll ||= requestAnimationFrame(onScroll); }, { passive: true });
 
-// one screen per gesture: hero, 01, 02, 03, 03 more, 04 (js/pager.js). the palette and fields keep their keys and wheel.
-const SCREENS = ['about', 'services', 'work', 'work-more', 'contact'].map($).filter(Boolean);
+// one screen per gesture: hero, 01, 02, 03, 03 more, 03 vpn, 04 (js/pager.js). the palette and fields keep their keys and wheel.
+const SCREENS = ['about', 'services', 'work', 'work-more', 'work-vpn', 'contact'].map($).filter(Boolean);
 const pager = createPager({
   screens: () => [0, ...SCREENS.map((el) => el.getBoundingClientRect().top + scrollY)],
   blocked: (e) => island.state === 'palette' || !!e.target.closest?.('input, textarea, select, [contenteditable]:not([contenteditable=false])'),

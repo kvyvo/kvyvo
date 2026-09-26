@@ -309,9 +309,62 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
 .sec-more > .eyebrow { margin: 0 0 22px; }
 #work .stats { margin-top: 32px; }
 
-/* ---------- ranteis ---------- */
-.ranteis { margin-top: 16px; padding: 28px; }
-.ranteis h3 { font-size: clamp(24px, 2.6vw, 32px); }
+/* ---------- ranteis: a plate in the service's own colours ----------
+   black in both themes, white type, the logo's pale gold used only inside the plate,
+   an orbit taken from the arc in the logo. */
+.ranteis, .b-ran { --gold: #FDE38E; }
+.ranteis {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); align-items: center; gap: 28px;
+  padding: clamp(28px, 4vw, 48px); background: #000; color: #fff;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / .06), var(--shadow-2);
+}
+.ranteis::before { /* a warm glow behind the mark */
+  content: ""; position: absolute; z-index: -1; right: -10%; top: 50%; width: 70%; aspect-ratio: 1; translate: 0 -50%;
+  background: radial-gradient(closest-side, rgb(253 227 142 / .13), rgb(253 227 142 / .04) 55%, transparent);
+}
+.r-orbit { position: absolute; z-index: -1; pointer-events: none; overflow: visible; }
+.r-orbit circle { fill: none; stroke: var(--gold); stroke-opacity: .16; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.r-orbit .r-far { stroke-opacity: .4; stroke-dasharray: 1 9; stroke-linecap: round; stroke-width: 1.6; }
+.r-spin { transform-box: view-box; transform-origin: 50% 50%; animation: r-spin 120s linear infinite; }
+@keyframes r-spin { to { rotate: 360deg; } }
+@media (prefers-reduced-motion: reduce) { .r-spin { animation: none; } }
+
+.r-body { display: flex; flex-direction: column; min-width: 0; }
+.r-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.r-kick { font-size: 12.5px; font-weight: 500; letter-spacing: .02em; color: rgb(255 255 255 / .6); }
+.r-role { display: inline-flex; align-items: center; gap: 7px; min-height: 26px; padding: 0 11px; border-radius: 999px; font: 500 12px/1 var(--mono); color: var(--gold); box-shadow: inset 0 0 0 1px rgb(253 227 142 / .35); }
+.r-role::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+.ranteis h3 { font-size: clamp(34px, 4.6vw, 60px); line-height: .98; letter-spacing: -.05em; margin: 20px 0 14px; }
+.ranteis p { color: rgb(255 255 255 / .66); font-size: 16px; max-width: 30em; }
+.r-pts { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; padding: 0; list-style: none; }
+.r-pts li { display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 14px 0 11px; border-radius: 999px; background: rgb(255 255 255 / .07); font-size: 13.5px; font-weight: 500; color: rgb(255 255 255 / .86); }
+.r-pts .ic { color: var(--gold); }
+.ranteis .btnrow { margin-top: 28px; }
+.btn.r-gold { background: var(--gold); color: #000; }
+.btn.r-gold:hover { background: #FFEDB0; }
+.btn.r-ghost { background: rgb(255 255 255 / .1); color: #fff; }
+.btn.r-ghost:hover { background: rgb(255 255 255 / .16); }
+.ranteis :focus-visible, .b-ran :focus-visible { outline-color: var(--gold); }
+.r-mark { position: relative; justify-self: center; width: min(100%, 260px); aspect-ratio: 1; }
+.r-mark .r-orbit { inset: -32%; width: 164%; height: 164%; }
+.r-logo { width: 100%; height: 100%; }
+@media (max-width: 760px) {
+  .ranteis { grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 24px; }
+  .ranteis::before { right: auto; left: -30%; top: 0; width: 90%; translate: 0 -38%; }
+  .r-mark { order: -1; justify-self: start; width: 76px; margin: 4px 0 0; }
+  .r-mark .r-orbit { inset: -60%; width: 220%; height: 220%; }
+  .ranteis h3 { margin-top: 16px; }
+  .ranteis .btnrow .btn { flex: 1 1 auto; }
+}
+
+/* the small tile in "about": same plate, lighter touch */
+.b-ran { position: relative; isolation: isolate; overflow: hidden; }
+.b-ran .r-orbit { inset: 0; width: 100%; height: 100%; }
+.b-ran .r-orbit circle { stroke-opacity: .2; }
+.b-ran .logo { box-shadow: 0 0 0 1px rgb(253 227 142 / .22); }
+.chip.on.gold { background: var(--gold); color: #000; }
+.chip.on.gold:hover { background: #FFEDB0; }
 
 /* ---------- contact: the black card ---------- */
 .contact { background: var(--island); color: #fff; padding: clamp(28px, 5vw, 56px); border-radius: 36px; }

@@ -25,7 +25,7 @@ async function open({ path = '/', width = 1440, height = 900, scheme = 'light', 
 }
 const snap = async (page, name, opts = {}) => shots && page.screenshot({ path: `${shots}/${name}.png`, ...opts });
 // the page turns one screen per gesture (js/pager.js): wheel, wait for the glide and for the wheel to go quiet
-const SCREENS = ['top', 'about', 'services', 'work', 'work-more', 'contact'];
+const SCREENS = ['top', 'about', 'services', 'work', 'work-more', 'work-vpn', 'contact'];
 const screenTops = (page) => page.evaluate((ids) => ids.map((id) => Math.min(document.documentElement.scrollHeight - innerHeight, id === 'top' ? 0 : document.getElementById(id).getBoundingClientRect().top + scrollY)), SCREENS);
 const y = (page) => page.evaluate(() => scrollY);
 const nav = (page) => page.getAttribute('#islIdle a.on', 'data-sec');
@@ -70,14 +70,17 @@ try {
     ok(Math.abs(await y(page) - tops[4]) <= 2 && await nav(page) === 'work', `page down: 03 more, nav still marks 03 (${await y(page)}, ${await nav(page)})`);
     await page.keyboard.press('ArrowDown');
     await page.waitForTimeout(900);
-    ok(Math.abs(await y(page) - tops[5]) <= 2 && await nav(page) === 'contact', `arrow down: 04 (${await y(page)}, ${await nav(page)})`);
+    ok(Math.abs(await y(page) - tops[5]) <= 2 && await nav(page) === 'work', `arrow down: 03 vpn, nav still marks 03 (${await y(page)}, ${await nav(page)})`);
+    await page.keyboard.press('ArrowDown');
+    await page.waitForTimeout(900);
+    ok(Math.abs(await y(page) - tops[6]) <= 2 && await nav(page) === 'contact', `arrow down: 04 (${await y(page)}, ${await nav(page)})`);
     await wheelDown(page, 400);
-    ok(Math.abs(await y(page) - tops[5]) <= 2, 'at the last screen a wheel goes nowhere');
+    ok(Math.abs(await y(page) - tops[6]) <= 2, 'at the last screen a wheel goes nowhere');
     await flick(page, -1);
-    ok(Math.abs(await y(page) - tops[4]) <= 2, `flick up: back one screen (${await y(page)} vs ${tops[4]})`);
+    ok(Math.abs(await y(page) - tops[5]) <= 2, `flick up: back one screen (${await y(page)} vs ${tops[5]})`);
     await page.keyboard.press('Shift+Space');
     await page.waitForTimeout(900);
-    ok(Math.abs(await y(page) - tops[3]) <= 2, 'shift space: back one more');
+    ok(Math.abs(await y(page) - tops[4]) <= 2, 'shift space: back one more');
     await page.keyboard.press('Home');
     await page.waitForTimeout(900);
     ok(await y(page) <= 2, 'home: back to the top');
