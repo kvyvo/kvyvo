@@ -52,7 +52,6 @@ export function createIsland({ commands }) {
     requestAnimationFrame(() => place());
   }
   new ResizeObserver(() => place(false)).observe(nav);
-  $('paletteKey').addEventListener('click', () => palette());
   function hide(on) {
     away = on;
     dlg.classList.toggle('away', on && m.state === 'idle');

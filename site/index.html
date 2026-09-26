@@ -32,11 +32,10 @@
   <div class="isl" id="islShape">
     <nav class="isl-l isl-idle" id="islIdle" data-i18n-aria-label="navAria" aria-label="разделы">
       <span class="nav-thumb" id="navThumb" aria-hidden="true"></span>
-      <a href="#about" data-sec="about"><b>01</b><span data-i18n="islAbout">обо мне</span></a>
-      <a href="#services" data-sec="services"><b>02</b><span data-i18n="islServices">услуги</span></a>
-      <a href="#work" data-sec="work"><b>03</b><span data-i18n="islWork">проекты</span></a>
-      <a href="#contact" data-sec="contact"><b>04</b><span data-i18n="islContact">контакты</span></a>
-      <button class="isl-kbd" id="paletteKey" type="button" data-i18n-aria-label="palAria" aria-label="команды">⌘k</button>
+      <a href="#about" data-sec="about"><span data-i18n="islAbout">обо мне</span></a>
+      <a href="#services" data-sec="services"><span data-i18n="islServices">услуги</span></a>
+      <a href="#work" data-sec="work"><span data-i18n="islWork">проекты</span></a>
+      <a href="#contact" data-sec="contact"><span data-i18n="islContact">контакты</span></a>
     </nav>
     <div class="isl-l isl-toast" id="islToast"><span class="isl-ic" aria-hidden="true"></span><span id="toastText"></span></div>
     <div class="isl-l isl-pal" id="islPal">
@@ -84,7 +83,6 @@
 
   <section class="sec" id="about" aria-labelledby="aboutTitle">
     <header class="sec-head rv">
-      <p class="eyebrow" data-i18n="secAbout">01 — обо мне</p>
       <h2 id="aboutTitle" data-i18n="aboutTitle">привет, я kvyvo</h2>
     </header>
     <div class="bento">
@@ -122,7 +120,6 @@
 
   <section class="sec" id="services" aria-labelledby="servicesTitle">
     <header class="sec-head rv">
-      <p class="eyebrow" data-i18n="secServices">02 — услуги</p>
       <h2 id="servicesTitle" data-i18n="servicesTitle">что могу сделать</h2>
     </header>
     <div class="services">
@@ -165,7 +162,6 @@
 
   <section class="sec" id="work" aria-labelledby="workTitle">
     <header class="sec-head rv">
-      <p class="eyebrow" data-i18n="secWork">03 — проекты</p>
       <h2 id="workTitle" data-i18n="workTitle">что сделано</h2>
       <p class="sec-lead" data-i18n="workLead">открытый код. каждый проект решает одну задачу до конца: с тестами и без лишних зависимостей.</p>
     </header>
@@ -198,10 +194,10 @@
   </section>
 
   <section class="sec sec-more" id="work-more" aria-labelledby="workMoreEyebrow">
-    <p class="eyebrow rv" id="workMoreEyebrow" data-i18n="secWorkMore">03 — проекты, ещё</p>
+    <p class="eyebrow rv" id="workMoreEyebrow" data-i18n="secWorkMore">ещё проекты</p>
     <div class="grid3">
       <article class="card proj rv" id="p-nickcheck">
-        <div class="card-head"><span class="num">2</span><span class="name">nickcheck</span><span class="chip" data-i18n="nTag">python · cli</span></div>
+        <div class="card-head"><span class="name">nickcheck</span><span class="chip" data-i18n="nTag">python · cli</span></div>
         <h3 data-i18n="nTitle">свободный ник за минуту</h3>
         <p data-i18n="nText">генерирует короткие произносимые псевдонимы и параллельно проверяет их на github, npm, pypi, docker hub, telegram и ещё 15 сервисах. свободные домены ищет через rdap.</p>
 <pre class="well"><span class="p">$ </span>pip install -r requirements.txt
@@ -211,7 +207,7 @@
       </article>
 
       <article class="card proj rv" id="p-whoami-bot" style="--d:80ms">
-        <div class="card-head"><span class="num">3</span><span class="name">whoami-bot</span><span class="chip" data-i18n="wTag">python · telegram</span></div>
+        <div class="card-head"><span class="name">whoami-bot</span><span class="chip" data-i18n="wTag">python · telegram</span></div>
         <h3 data-i18n="wTitle">что телеграм рассказывает о тебе боту</h3>
         <p data-i18n="wText">команда /me собирает карточку: id, имя, username, язык, premium, био, фото — и отдельно то, чего бот не видит. плюс кубики и печенье с предсказанием.</p>
 <pre class="well"><span class="a">/me</span>       <span data-i18n="wc1">что бот обо мне знает</span>
@@ -222,7 +218,7 @@
       </article>
 
       <article class="card proj rv" id="p-books-scraper" style="--d:160ms">
-        <div class="card-head"><span class="num">4</span><span class="name">books-scraper</span><span class="chip" data-i18n="bTag">python · данные</span></div>
+        <div class="card-head"><span class="name">books-scraper</span><span class="chip" data-i18n="bTag">python · данные</span></div>
         <h3 data-i18n="bTitle">каталог в excel</h3>
         <p data-i18n="bText">проходит все страницы books.toscrape.com и собирает 1000 книг: название, цена, наличие. результат — одна таблица.</p>
 <pre class="well"><span class="p">$ </span>python скрап.py
@@ -233,8 +229,7 @@
     </div>
   </section>
 
-  <section class="sec sec-more" id="work-vpn" aria-labelledby="workVpnEyebrow">
-    <p class="eyebrow rv" id="workVpnEyebrow" data-i18n="secWorkVpn">03 — проекты, впн</p>
+  <section class="sec sec-more" id="work-vpn" aria-labelledby="rTitle">
     <article class="card ranteis rv" id="p-ranteis" aria-labelledby="rTitle">
       <div class="r-body">
         <div class="r-head"><span class="r-kick mono" data-i18n="rKick">впн-сервис</span><span class="r-role" data-i18n="rTag">co-owner</span></div>
@@ -258,7 +253,6 @@
 
   <section class="sec" id="contact" aria-labelledby="contactTitle">
     <div class="card contact rv">
-      <p class="eyebrow" data-i18n="secContact">04 — контакты</p>
       <h2 id="contactTitle" data-i18n="contactTitle">есть задача? напиши.</h2>
       <p class="sec-lead" data-i18n="contactLead">удобнее всего — telegram. расскажи, что нужно, и к какому сроку.</p>
       <div class="contact-links">

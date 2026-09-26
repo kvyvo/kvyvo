@@ -7,7 +7,6 @@ import { createPager } from './pager.js';
 const $ = (id) => document.getElementById(id);
 const GH = 'https://github.com/kvyvo';
 const KALKA = 'https://kvyvo.github.io/kalka/';
-const MAC = /Mac|iPhone|iPad/.test(navigator.userAgent);
 
 applyTheme();
 apply();
@@ -39,7 +38,6 @@ const commands = () => [
   { title: t('cmdTheme', { mode: t(THEME_LABEL[THEME_NEXT[getTheme()]]) }), run: () => t('cmdTheme', { mode: t(THEME_LABEL[nextTheme()]) }) },
 ];
 const island = createIsland({ commands });
-$('paletteKey').textContent = MAC ? '⌘k' : 'ctrl k';
 
 let rafScroll = 0;
 const top = document.querySelector('.top');
