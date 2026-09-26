@@ -15,7 +15,6 @@ const RU = {
 
   secAbout: '01 — обо мне',
   aboutTitle: 'привет, я kvyvo',
-  aboutLead: 'коротко: кто я и почему со мной удобно работать.',
   aIntro: 'мне 18, учусь в колледже и беру заказы. пишу на python и js, дизайн делаю в photoshop и after effects. люблю доводить маленькие вещи до конца: с тестами, readme и аккуратным интерфейсом.',
   aAgeK: '18', aAge: 'лет, учусь в колледже',
   aTaxT: 'самозанятый',
@@ -26,7 +25,6 @@ const RU = {
 
   secServices: '02 — услуги',
   servicesTitle: 'что могу сделать',
-  servicesLead: 'пять направлений. для кода есть живые примеры в открытом доступе.',
   s1T: 'телеграм-боты',
   s1X: 'боты на aiogram 3: команды, кнопки, карточки, работа с апи телеграма и сторонних сервисов.',
   s2T: 'скрипты и автоматизация',
@@ -134,7 +132,6 @@ const EN = {
 
   secAbout: '01 — about',
   aboutTitle: 'hi, i’m kvyvo',
-  aboutLead: 'in short: who i am and why i’m easy to work with.',
   aIntro: 'i’m 18, study at college and take orders. i write python and js, and design in photoshop and after effects. i like finishing small things properly: with tests, a readme and a neat interface.',
   aAgeK: '18', aAge: 'years old, at college',
   aTaxT: 'self-employed',
@@ -145,7 +142,6 @@ const EN = {
 
   secServices: '02 — services',
   servicesTitle: 'what i can do',
-  servicesLead: 'five directions. the code ones have live examples in open source.',
   s1T: 'telegram bots',
   s1X: 'bots on aiogram 3: commands, buttons, cards, the telegram api and third-party services.',
   s2T: 'scripts & automation',
