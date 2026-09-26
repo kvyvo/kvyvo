@@ -211,7 +211,7 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
 .feature h3 { font-size: clamp(28px, 3.2vw, 40px); letter-spacing: -.04em; margin-top: 22px; }
 .feature p { font-size: 16px; }
 .shot { margin: 0; border-radius: 20px; overflow: hidden; background: var(--surface-2); box-shadow: 0 0 0 1px var(--line); aspect-ratio: 1600 / 1000; }
-.shot img { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+.shot img, .shot video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .shot-dark { display: none; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .shot-light { display: none; } :root:not([data-theme="light"]) .shot-dark { display: block; } }
 :root[data-theme="dark"] .shot-light { display: none; }
@@ -319,6 +319,18 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
   padding: clamp(28px, 4vw, 48px); background: #000; color: #fff;
   box-shadow: 0 0 0 1px rgb(255 255 255 / .06), var(--shadow-2);
 }
+/* the service's own surface: its noise texture over the black, as on ranteis.one (loaded from there) */
+.ranteis::after, .b-ran::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit;
+  background: url("https://ranteis.one/_nuxt/images/textures/surface-noise.C2lZ40l3.webp") repeat center / 256px;
+  opacity: .35; mix-blend-mode: screen;
+}
+/* the service's own surface: a pixel noise over the black, as on ranteis.one */
+.ranteis::after, .b-ran::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit;
+  background: url("../assets/ranteis-noise.png") repeat 0 0 / 96px; image-rendering: pixelated; opacity: .07;
+}
+.r-gold { color: var(--gold); }
 .ranteis::before { /* a warm glow behind the mark */
   content: ""; position: absolute; z-index: -1; right: -10%; top: 50%; width: 70%; aspect-ratio: 1; translate: 0 -50%;
   background: radial-gradient(closest-side, rgb(253 227 142 / .13), rgb(253 227 142 / .04) 55%, transparent);
@@ -360,8 +372,18 @@ h2 { font: 600 clamp(34px, 4.6vw, 56px)/1 var(--font); letter-spacing: -.045em; 
 
 /* the small tile in "about": same plate, lighter touch */
 .b-ran { position: relative; isolation: isolate; overflow: hidden; }
-.b-ran .r-orbit { inset: 0; width: 100%; height: 100%; }
-.b-ran .r-orbit circle { stroke-opacity: .2; }
+/* a small system around the logo: two tilted orbits like the arc in the mark, satellites riding them */
+.r-sys { position: relative; width: 44px; height: 44px; }
+.r-sys .logo { position: relative; z-index: 1; }
+.r-sat { position: absolute; left: -88px; top: -24px; width: 220px; height: 90px; overflow: visible; pointer-events: none; }
+.r-sat ellipse { fill: none; stroke: var(--gold); vector-effect: non-scaling-stroke; }
+.r-o1 { stroke-opacity: .28; stroke-width: 1; }
+.r-o2 { stroke-opacity: .45; stroke-width: 1.4; stroke-dasharray: 1 7; stroke-linecap: round; animation: r-dash 14s linear infinite; }
+.r-dot { fill: var(--gold); offset-path: path("M-74 0a74 21 0 1 0 148 0a74 21 0 1 0-148 0"); offset-rotate: 0deg; animation: r-ride 7s linear infinite; }
+.r-dot2 { opacity: .7; offset-path: path("M100 0a100 30 0 1 1-200 0a100 30 0 1 1 200 0"); animation-duration: 12s; }
+@keyframes r-ride { to { offset-distance: 100%; } }
+@keyframes r-dash { to { stroke-dashoffset: -80; } }
+@media (prefers-reduced-motion: reduce) { .r-dot, .r-o2 { animation: none; } }
 .b-ran .logo { box-shadow: 0 0 0 1px rgb(253 227 142 / .22); }
 .chip.on.gold { background: var(--gold); color: #000; }
 .chip.on.gold:hover { background: #FFEDB0; }

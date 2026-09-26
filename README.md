@@ -1,55 +1,33 @@
-<a href="https://kvyvo.github.io/">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/hero-dark.png">
-    <img src="docs/hero-light.png" alt="kvyvo — боты, парсеры и сайты">
-  </picture>
-</a>
+<a href="https://kvyvo.github.io/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/hero-dark.png"><img src="docs/hero-light.png" width="520" alt="kvyvo — боты, парсеры и сайты"></picture></a>
 
-# kvyvo
+**kvyvo** — боты, парсеры и сайты. 18 лет, самозанятый, беру заказы. python, js, photoshop, after effects. co-owner [ranteis network](https://ranteis.one).
 
-боты, парсеры и сайты. мне 18, учусь в колледже и беру заказы как самозанятый, с чеком. пишу на python и js, дизайн делаю в photoshop и after effects. co-owner впн-сервиса [ranteis network](https://ranteis.one).
+**[kvyvo.github.io →](https://kvyvo.github.io/)** · [telegram](https://t.me/kvyvo) · [instagram](https://www.instagram.com/kvyvo_) · discord `kvyvo.`
 
-**[kvyvo.github.io →](https://kvyvo.github.io/)** · [telegram](https://t.me/kvyvo) · [instagram](https://www.instagram.com/kvyvo_) · discord: `kvyvo.` · [english below](#english)
+<details>
+<summary><b>что могу сделать</b></summary>
 
-## что могу сделать
-
-- **телеграм-боты** — aiogram 3: команды, кнопки, карточки, работа с апи. пример: [whoami-bot](https://github.com/kvyvo/whoami-bot)
-- **скрипты и автоматизация** — проверки через апи, пакетная обработка, выгрузки. пример: [nickcheck](https://github.com/kvyvo/nickcheck)
+- **телеграм-боты** — aiogram 3: команды, кнопки, карточки. пример: [whoami-bot](https://github.com/kvyvo/whoami-bot)
+- **скрипты** — проверки через апи, пакетная обработка, выгрузки. пример: [nickcheck](https://github.com/kvyvo/nickcheck)
 - **парсеры** — данные с сайтов в excel, csv или базу. пример: [books-scraper](https://github.com/kvyvo/books-scraper)
-- **сайты и фронтенд** — html, css, react. адаптив, тёмная тема, анимация. пример: [kalka](https://kvyvo.github.io/kalka/)
-- **дизайн** — обложки, баннеры и макеты в photoshop, моушн в after effects
+- **сайты** — html, css, react. пример: [kalka](https://kvyvo.github.io/kalka/)
+- **дизайн** — photoshop, after effects
 
-как работаем: пишешь в [telegram](https://t.me/kvyvo) → обсуждаем срок и цену → делаю → сдаю работу и чек.
+пишешь в [telegram](https://t.me/kvyvo) → обсуждаем срок и цену → делаю → сдаю работу и чек.
+</details>
 
-## проекты
+<details>
+<summary><b>проекты</b></summary>
 
-| проект | что делает | стек |
-|---|---|---|
-| **[kalka](https://github.com/kvyvo/kalka)**<br>[открыть →](https://kvyvo.github.io/kalka/) | световой стол из экрана: любая картинка переносится на бумагу в натуральную величину, по частям | js без сборки, pwa, web workers, playwright |
-| **[nickcheck](https://github.com/kvyvo/nickcheck)** | короткие произносимые ники с проверкой занятости на 20 сервисах и свободные домены через rdap | python, requests |
-| **[whoami-bot](https://github.com/kvyvo/whoami-bot)** | телеграм-бот: что телеграм рассказывает о тебе боту. плюс кубики и печенье с предсказанием | python, aiogram 3.31 |
-| **[books-scraper](https://github.com/kvyvo/books-scraper)** | проходит все страницы books.toscrape.com и собирает 1000 книг в таблицу excel | requests, beautifulsoup, pandas |
-| **[ranteis network](https://ranteis.one)** · [бот](https://t.me/RanteisNetworkBot) | впн-сервис, co-owner | — |
+- **[kalka](https://github.com/kvyvo/kalka)** · [открыть](https://kvyvo.github.io/kalka/) — световой стол из экрана: картинка на бумагу в натуральную величину
+- **[nickcheck](https://github.com/kvyvo/nickcheck)** — свободный ник на 20 сервисах и домены через rdap
+- **[whoami-bot](https://github.com/kvyvo/whoami-bot)** — что телеграм рассказывает о тебе боту
+- **[books-scraper](https://github.com/kvyvo/books-scraper)** — 1000 книг с books.toscrape.com в excel
+- **[ranteis network](https://ranteis.one)** · [бот](https://t.me/RanteisNetworkBot) — впн-сервис, co-owner
+</details>
 
-## сайт
+<details>
+<summary><b>english</b></summary>
 
-[kvyvo.github.io](https://kvyvo.github.io/) лежит в `site/` и публикуется из [kvyvo/kvyvo.github.io](https://github.com/kvyvo/kvyvo.github.io). дизайн-система kalka: тёплый серый холст, чёрно-белые компоненты, один красный акцент, geist, движение на пружинах. наверху шапка; при прокрутке она уезжает, и сверху появляется навигация 01–04 с подсветкой текущего раздела, по <kbd>⌘k</kbd> — палитра команд. ru/en, светлая и тёмная тема, без сборки.
-
-```
-npm run serve     # http://localhost:5173
-npm run check     # сценарии в chromium: ошибки, телефон 320 px, палитра, язык, тёмная тема, 404
-npm run shots     # картинки для readme и og-превью с настоящей страницы
-```
-
----
-
-## english
-
-**kvyvo** — bots, scrapers and websites. 18, at college, taking orders as a registered self-employed (russia). python and js, design in photoshop and after effects. co-owner of the [ranteis network](https://ranteis.one) vpn.
-
-- **[kalka](https://github.com/kvyvo/kalka)** · [open →](https://kvyvo.github.io/kalka/) — a light table from a laptop screen: any picture onto paper at true size, part by part
-- **[nickcheck](https://github.com/kvyvo/nickcheck)** — pronounceable handles checked on 20 services, free domains over rdap
-- **[whoami-bot](https://github.com/kvyvo/whoami-bot)** — what telegram tells a bot about you
-- **[books-scraper](https://github.com/kvyvo/books-scraper)** — 1,000 books from books.toscrape.com into one excel sheet
-
-contact: [telegram](https://t.me/kvyvo) · [instagram](https://www.instagram.com/kvyvo_) · discord `kvyvo.`
+bots, scrapers and websites. 18, self-employed, open for orders. python, js, photoshop, after effects. co-owner of [ranteis network](https://ranteis.one). projects: [kalka](https://github.com/kvyvo/kalka), [nickcheck](https://github.com/kvyvo/nickcheck), [whoami-bot](https://github.com/kvyvo/whoami-bot), [books-scraper](https://github.com/kvyvo/books-scraper). the site's source lives in `site/`.
+</details>
