@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>kvyvo — боты, парсеры и сайты</title>
+<meta name="description" content="kvyvo: боты на python, скрипты и парсеры, сайты на html, css и react, дизайн. самозанятый, беру заказы. co-owner ranteis network.">
+<meta name="theme-color" content="#ECEAE4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E0E0D" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="canonical" href="https://kvyvo.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kvyvo.github.io/">
+<meta property="og:title" content="kvyvo — боты, парсеры и сайты">
+<meta property="og:description" content="боты, скрипты, парсеры, сайты и дизайн. самозанятый, принимаю заказы.">
+<meta property="og:image" content="https://kvyvo.github.io/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<script>
+  // before first paint: pinned theme, and a flag that lets arrivals start hidden
+  document.documentElement.classList.add('js');
+  try { var m = localStorage.getItem('kvyvo.theme'); if (m === 'dark' || m === 'light') document.documentElement.dataset.theme = m; } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..600&family=Geist+Mono:wght@400..500&display=swap">
+<link rel="stylesheet" href="css/site.css">
+<link rel="modulepreload" href="js/app.js">
+</head>
+<body>
+
+<!-- the island: one shape for where-you-are, toasts and the command palette -->
+<dialog id="island" aria-label="kvyvo">
+  <div class="isl" id="islShape">
+    <button class="isl-l isl-idle" id="islIdle" type="button">
+      <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="3.5"/><path d="M8 2v12M2 8h12"/></svg>
+      <span class="sw-t" id="islSummary">принимаю заказы</span>
+      <svg class="ring" id="islRing" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" pathLength="100"/><circle id="islRingFg" cx="10" cy="10" r="7.5" pathLength="100"/></svg>
+      <kbd class="isl-kbd" id="paletteKey">⌘k</kbd>
+    </button>
+    <div class="isl-l isl-toast" id="islToast"><span class="isl-ic" aria-hidden="true"></span><span id="toastText"></span></div>
+    <div class="isl-l isl-pal" id="islPal">
+      <div class="pal-in">
+        <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg>
+        <input id="palInput" type="text" role="combobox" aria-expanded="true" aria-controls="palList" data-i18n-aria-label="palAria" aria-label="команды" autocomplete="off" spellcheck="false">
+        <kbd>esc</kbd>
+      </div>
+      <div class="pal-list"><div class="pal-hi" id="palHi"></div><ul id="palList" role="listbox"></ul></div>
+    </div>
+  </div>
+</dialog>
+<div class="sr" aria-live="polite" id="live"></div>
+
+<header class="top">
+  <a class="brand" href="./" aria-label="kvyvo">
+    <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="3.5"/><path d="M8 2v12M2 8h12"/></svg>
+    <span>kvyvo</span>
+  </a>
+  <div class="top-actions">
+    <a class="plain" href="https://github.com/kvyvo" aria-label="github"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 13.5c-3 .9-3-1.5-4.2-1.8M10 15v-2.4c0-.7.1-1 .5-1.4 2-.2 3.9-1 3.9-4.4 0-.9-.3-1.7-.9-2.3.3-.8.3-1.7-.1-2.4 0 0-.7-.2-2.4.9a8 8 0 0 0-4.2 0C5.2 1 4.5 1.2 4.5 1.2c-.4.7-.4 1.6-.1 2.4-.6.6-.9 1.4-.9 2.3 0 3.4 1.9 4.2 3.9 4.4-.4.4-.5.8-.5 1.4V15"/></svg></a>
+    <button class="plain" type="button" id="langBtn" data-i18n="langBtn" data-i18n-aria-label="langAria" aria-label="switch to english">en</button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" id="top">
+    <div class="hero-text">
+      <div class="who rv">
+        <img class="ava" src="assets/avatar.jpg" width="96" height="96" alt="kvyvo">
+        <div class="who-t"><b>kvyvo</b><span class="status"><i aria-hidden="true"></i><span data-i18n="status">принимаю заказы</span></span></div>
+      </div>
+      <p class="eyebrow rv" style="--d:40ms" data-i18n="eyebrow">18 лет · самозанятый · python · js · дизайн</p>
+      <h1 class="rv" style="--d:80ms" data-i18n="heroTitle">боты, парсеры и сайты</h1>
+      <p class="lead rv" style="--d:120ms" data-i18n="heroLead">пишу на python и js, делаю дизайн в photoshop и after effects. беру заказы как самозанятый, с чеком. co-owner впн-сервиса ranteis network.</p>
+      <div class="hero-cta rv" style="--d:180ms">
+        <a class="btn primary big" href="https://t.me/kvyvo"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M14 2.5 1.8 7.3l4.4 1.5M14 2.5l-2.2 11-5.6-4.7M14 2.5 6.2 8.8v4.4l2.2-2.4"/></svg><span data-i18n="heroWrite">написать в telegram</span></a>
+        <a class="btn secondary big" href="#services"><span data-i18n="heroServices">что могу сделать</span><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M4 9l4 4 4-4"/></svg></a>
+      </div>
+    </div>
+    <figure class="hero-art rv" style="--d:120ms">
+      <svg id="heroSvg" role="group" data-i18n-aria-label="heroAria" aria-label="лист из четырёх частей: экран под листом по очереди подсвечивает, что я делаю, на примере проектов"></svg>
+      <figcaption class="hero-cap"><span class="dot" aria-hidden="true"></span><span class="sw-t" id="heroCap">сайты · kalka</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="sec" id="about" aria-labelledby="aboutTitle">
+    <header class="sec-head rv">
+      <p class="eyebrow" data-i18n="secAbout">01 — обо мне</p>
+      <h2 id="aboutTitle" data-i18n="aboutTitle">привет, я kvyvo</h2>
+      <p class="sec-lead" data-i18n="aboutLead">коротко: кто я и почему со мной удобно работать.</p>
+    </header>
+    <div class="bento">
+      <article class="card b-intro rv">
+        <img class="ava big" src="assets/avatar.jpg" width="160" height="160" alt="" loading="lazy">
+        <p class="intro" data-i18n="aIntro">мне 18, учусь в колледже и беру заказы. пишу на python и js, дизайн делаю в photoshop и after effects. люблю доводить маленькие вещи до конца: с тестами, readme и аккуратным интерфейсом.</p>
+      </article>
+      <article class="card b-age rv" style="--d:60ms">
+        <b class="kpi" data-i18n="aAgeK">18</b>
+        <p data-i18n="aAge">лет, учусь в колледже</p>
+      </article>
+      <article class="card b-tax rv" style="--d:120ms">
+        <span class="glyph"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.8h8v12.4l-1.6-1-1.2 1-1.2-1-1.2 1-1.2-1-1.6 1z"/><path d="M6 5.5h4M6 8h4M6 10.5h2"/></svg></span>
+        <h3 data-i18n="aTaxT">самозанятый</h3>
+        <p data-i18n="aTaxX">официально, нпд в рф. на каждый заказ — чек.</p>
+      </article>
+      <article class="card b-ran dark rv" style="--d:60ms">
+        <span class="glyph"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 13 3.8V8c0 3-2.2 5-5 6.2C5.2 13 3 11 3 8V3.8z"/><path d="M8 5v3.5M8 10.8v.2"/></svg></span>
+        <h3 data-i18n="aRanT">ranteis network</h3>
+        <p data-i18n="aRanX">co-owner впн-сервиса. сайт и бот в telegram.</p>
+        <div class="btnrow">
+          <a class="chip on" href="https://ranteis.one">ranteis.one<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+          <a class="chip on" href="https://t.me/RanteisNetworkBot">@ranteisnetworkbot<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+        </div>
+      </article>
+      <article class="card b-stack rv" style="--d:120ms">
+        <span class="label mono" data-i18n="aStack">стек</span>
+        <div class="chips"><span class="chip">python</span><span class="chip">aiogram</span><span class="chip">requests</span><span class="chip">beautifulsoup</span><span class="chip">pandas</span><span class="chip">javascript</span><span class="chip">react</span><span class="chip">html</span><span class="chip">css</span><span class="chip">playwright</span><span class="chip">photoshop</span><span class="chip">after effects</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec" id="services" aria-labelledby="servicesTitle">
+    <header class="sec-head rv">
+      <p class="eyebrow" data-i18n="secServices">02 — услуги</p>
+      <h2 id="servicesTitle" data-i18n="servicesTitle">что могу сделать</h2>
+      <p class="sec-lead" data-i18n="servicesLead">пять направлений. для кода есть живые примеры в открытом доступе.</p>
+    </header>
+    <div class="services">
+      <article class="card svc rv">
+        <span class="glyph"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3" width="12" height="9" rx="3"/><path d="M8 1v2M5.5 7v.5M10.5 7v.5M6 14h4"/></svg></span>
+        <h3 data-i18n="s1T">телеграм-боты</h3><p data-i18n="s1X">боты на aiogram 3: команды, кнопки, карточки, работа с апи телеграма и сторонних сервисов.</p>
+        <a class="link" href="#p-whoami-bot"><span data-i18n="example">пример</span>: whoami-bot</a>
+      </article>
+      <article class="card svc rv" style="--d:50ms">
+        <span class="glyph"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2.5" width="12" height="11" rx="2.5"/><path d="m5 6.5 2 1.5-2 1.5M8.5 10H11"/></svg></span>
+        <h3 data-i18n="s2T">скрипты и автоматизация</h3><p data-i18n="s2X">python-скрипты, которые делают рутину за тебя: проверки через апи, пакетная обработка, выгрузки.</p>
+        <a class="link" href="#p-nickcheck"><span data-i18n="example">пример</span>: nickcheck</a>
+      </article>
+      <article class="card svc rv" style="--d:100ms">
+        <span class="glyph"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M2 9.5h12M6.5 6v7.5"/></svg></span>
+        <h3 data-i18n="s3T">парсеры</h3><p data-i18n="s3X">сбор данных с сайтов в excel, csv или базу. все страницы каталога, аккуратные колонки.</p>
+        <a class="link" href="#p-books-scraper"><span data-i18n="example">пример</span>: books-scraper</a>
+      </article>
+      <article class="card svc rv" style="--d:150ms">
+        <span class="glyph"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.8" y="2.5" width="12.4" height="9" rx="2"/><path d="M5.5 14h5M8 11.5V14"/></svg></span>
+        <h3 data-i18n="s4T">сайты и фронтенд</h3><p data-i18n="s4X">лендинги и веб-приложения на html, css и react. адаптив, тёмная тема, плавная анимация.</p>
+        <a class="link" href="#p-kalka"><span data-i18n="example">пример</span>: kalka</a>
+      </article>
+      <article class="card svc rv" style="--d:200ms">
+        <span class="glyph"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 2.5 13.5 5.5 6 13H3v-3z"/><path d="m9 4 3 3"/></svg></span>
+        <h3 data-i18n="s5T">дизайн</h3><p data-i18n="s5X">обложки, баннеры и макеты в photoshop, моушн и анимация в after effects.</p>
+        <span class="link muted">photoshop · after effects</span>
+      </article>
+    </div>
+    <div class="steps rv">
+      <p class="eyebrow" data-i18n="stepsTitle">как работаем</p>
+      <ol>
+        <li><span class="num">1</span><span data-i18n="st1">пишешь в telegram</span></li>
+        <li><span class="num">2</span><span data-i18n="st2">обсуждаем задачу, срок и цену</span></li>
+        <li><span class="num">3</span><span data-i18n="st3">делаю</span></li>
+        <li><span class="num">4</span><span data-i18n="st4">сдаю результат и чек</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec" id="work" aria-labelledby="workTitle">
+    <header class="sec-head rv">
+      <p class="eyebrow" data-i18n="secWork">03 — проекты</p>
+      <h2 id="workTitle" data-i18n="workTitle">что сделано</h2>
+      <p class="sec-lead" data-i18n="workLead">открытый код. каждый проект решает одну задачу до конца: с тестами и без лишних зависимостей.</p>
+    </header>
+    <article class="card feature rv" id="p-kalka">
+      <div>
+        <div class="card-head"><span class="num">1</span><span class="name">kalka</span><span class="chip" data-i18n="kTag">веб · pwa</span></div>
+        <h3 data-i18n="kTitle">световой стол из экрана</h3>
+        <p data-i18n="kText">любая картинка переносится на бумагу в натуральную величину: экран показывает её по частям, ты кладёшь лист сверху и обводишь. экран определяется сам, масштаб проверяется банковской картой.</p>
+        <ul class="facts">
+          <li data-i18n="kF1">jpg · png · svg · pdf</li>
+          <li data-i18n="kF2">a4…a0 и свой размер</li>
+          <li data-i18n="kF3">офлайн · ru/en · ⌘k</li>
+          <li data-i18n="kF4">25 unit + 15 e2e</li>
+        </ul>
+        <div class="btnrow">
+          <a class="btn primary big" href="https://kvyvo.github.io/kalka/"><span data-i18n="kOpen">открыть kalka</span><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+          <a class="btn secondary big" href="https://github.com/kvyvo/kalka"><span data-i18n="source">исходники</span></a>
+        </div>
+      </div>
+      <figure class="shot">
+        <img class="shot-light" src="assets/kalka-light.jpg" width="1600" height="1000" loading="lazy" decoding="async" data-i18n-alt="kAlt" alt="kalka: настройка картинки и план листа a3 из частей">
+        <img class="shot-dark" src="assets/kalka-dark.jpg" width="1600" height="1000" loading="lazy" decoding="async" data-i18n-alt="kAlt" alt="kalka: настройка картинки и план листа a3 из частей">
+      </figure>
+    </article>
+
+    <div class="grid3">
+      <article class="card proj rv" id="p-nickcheck">
+        <div class="card-head"><span class="num">2</span><span class="name">nickcheck</span><span class="chip" data-i18n="nTag">python · cli</span></div>
+        <h3 data-i18n="nTitle">свободный ник за минуту</h3>
+        <p data-i18n="nText">генерирует короткие произносимые псевдонимы и параллельно проверяет их на github, npm, pypi, docker hub, telegram и ещё 15 сервисах. свободные домены ищет через rdap.</p>
+<pre class="well"><span class="p">$ </span>pip install -r requirements.txt
+<span class="p">$ </span>python nickcheck.py kvaro zvelo</pre>
+        <ul class="facts"><li data-i18n="nF">20 сервисов · rdap · 31 тест</li></ul>
+        <div class="btnrow"><a class="link" href="https://github.com/kvyvo/nickcheck">github<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a></div>
+      </article>
+
+      <article class="card proj rv" id="p-whoami-bot" style="--d:80ms">
+        <div class="card-head"><span class="num">3</span><span class="name">whoami-bot</span><span class="chip" data-i18n="wTag">python · telegram</span></div>
+        <h3 data-i18n="wTitle">что телеграм рассказывает о тебе боту</h3>
+        <p data-i18n="wText">команда /me собирает карточку: id, имя, username, язык, premium, био, фото — и отдельно то, чего бот не видит. плюс кубики и печенье с предсказанием.</p>
+<pre class="well"><span class="a">/me</span>       <span data-i18n="wc1">что бот обо мне знает</span>
+<span class="a">/roll</span>     <span data-i18n="wc2">бросить кубик</span>
+<span class="a">/fortune</span>  <span data-i18n="wc3">печенье с предсказанием</span></pre>
+        <ul class="facts"><li data-i18n="wF">aiogram 3.31 · rich messages · 11 тестов</li></ul>
+        <div class="btnrow"><a class="link" href="https://github.com/kvyvo/whoami-bot">github<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a></div>
+      </article>
+
+      <article class="card proj rv" id="p-books-scraper" style="--d:160ms">
+        <div class="card-head"><span class="num">4</span><span class="name">books-scraper</span><span class="chip" data-i18n="bTag">python · данные</span></div>
+        <h3 data-i18n="bTitle">каталог в excel</h3>
+        <p data-i18n="bText">проходит все страницы books.toscrape.com и собирает 1000 книг: название, цена, наличие. результат — одна таблица.</p>
+<pre class="well"><span class="p">$ </span>python скрап.py
+<span class="p">→ </span>books.xlsx · 1000 книг</pre>
+        <ul class="facts"><li data-i18n="bF">requests · beautifulsoup · pandas</li></ul>
+        <div class="btnrow"><a class="link" href="https://github.com/kvyvo/books-scraper">github<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a></div>
+      </article>
+    </div>
+    <article class="card ranteis rv" id="p-ranteis">
+      <div class="card-head"><span class="num">5</span><span class="name">ranteis network</span><span class="chip" data-i18n="rTag">co-owner</span></div>
+      <h3 data-i18n="rTitle">впн-сервис ranteis network</h3>
+      <p data-i18n="rText">совладелец сервиса. подключение и управление — через бота в telegram.</p>
+      <div class="btnrow">
+        <a class="btn primary big" href="https://ranteis.one"><span data-i18n="rSite">сайт</span> · ranteis.one<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+        <a class="btn secondary big" href="https://t.me/RanteisNetworkBot"><span data-i18n="rBot">бот в telegram</span></a>
+      </div>
+    </article>
+    <div class="stats rv">
+      <div><b>4</b><span data-i18n="s1">открытых проекта</span></div>
+      <div><b>82</b><span data-i18n="s2">автотеста</span></div>
+      <div><b>20</b><span data-i18n="s3">сервисов в nickcheck</span></div>
+      <div><b>0</b><span data-i18n="s4">фреймворков на фронтенде</span></div>
+    </div>
+  </section>
+
+  <section class="sec" id="contact" aria-labelledby="contactTitle">
+    <div class="card contact rv">
+      <p class="eyebrow" data-i18n="secContact">04 — контакты</p>
+      <h2 id="contactTitle" data-i18n="contactTitle">есть задача? напиши.</h2>
+      <p class="sec-lead" data-i18n="contactLead">удобнее всего — telegram. расскажи, что нужно, и к какому сроку.</p>
+      <div class="contact-links">
+        <a class="btn light big" href="https://t.me/kvyvo"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M14 2.5 1.8 7.3l4.4 1.5M14 2.5l-2.2 11-5.6-4.7M14 2.5 6.2 8.8v4.4l2.2-2.4"/></svg>telegram · @kvyvo</a>
+        <button class="btn ghost big" type="button" data-copy="discord"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="2"/><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"/></svg><span data-i18n="copyDiscord">discord · kvyvo</span></button>
+        <a class="btn ghost big" href="https://www.instagram.com/kvyvo_"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="3.5"/><circle cx="8" cy="8" r="2.8"/><path d="M11.4 4.6v.1"/></svg>instagram · @kvyvo_</a>
+        <a class="btn ghost big" href="https://github.com/kvyvo"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 13.5c-3 .9-3-1.5-4.2-1.8M10 15v-2.4c0-.7.1-1 .5-1.4 2-.2 3.9-1 3.9-4.4 0-.9-.3-1.7-.9-2.3.3-.8.3-1.7-.1-2.4 0 0-.7-.2-2.4.9a8 8 0 0 0-4.2 0C5.2 1 4.5 1.2 4.5 1.2c-.4.7-.4 1.6-.1 2.4-.6.6-.9 1.4-.9 2.3 0 3.4 1.9 4.2 3.9 4.4-.4.4-.5.8-.5 1.4V15"/></svg>github · kvyvo</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span><span data-i18n="foot">kvyvo — открытый код, mit.</span> <span data-i18n="footNote">сайт без сборки и фреймворков, как kalka.</span></span>
+    <span class="links"><a href="https://github.com/kvyvo">github</a><a href="https://kvyvo.github.io/kalka/">kalka</a></span>
+  </footer>
+</main>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

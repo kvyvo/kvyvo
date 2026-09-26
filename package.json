@@ -1,0 +1,14 @@
+{
+  "name": "kvyvo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "python3 -m http.server 5173 -d site",
+    "check": "node tools/check.mjs",
+    "shots": "node tools/shots.mjs",
+    "assets": "node tools/assets.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.0"
+  }
+}
