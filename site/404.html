@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#ECEAE4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E0E0D" media="(prefers-color-scheme: dark)">
 <!-- served for any missing path, so every URL here is absolute -->
-<link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/icon-64.png" type="image/png">
 <script>
   document.documentElement.classList.add('js');
   try { var m = localStorage.getItem('kvyvo.theme'); if (m === 'dark' || m === 'light') document.documentElement.dataset.theme = m; } catch (e) {}
@@ -23,12 +23,14 @@
 
 <dialog id="island" aria-label="kvyvo">
   <div class="isl" id="islShape">
-    <button class="isl-l isl-idle" id="islIdle" type="button">
-      <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="3.5"/><path d="M8 2v12M2 8h12"/></svg>
-      <span class="sw-t" id="islSummary">404</span>
-      <svg class="ring" id="islRing" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" pathLength="100"/><circle id="islRingFg" cx="10" cy="10" r="7.5" pathLength="100"/></svg>
-      <kbd class="isl-kbd" id="paletteKey">⌘k</kbd>
-    </button>
+    <nav class="isl-l isl-idle" id="islIdle" data-i18n-aria-label="navAria" aria-label="разделы">
+      <span class="nav-thumb" id="navThumb" aria-hidden="true"></span>
+      <a href="/#about" data-sec="about"><b>01</b><span data-i18n="islAbout">обо мне</span></a>
+      <a href="/#services" data-sec="services"><b>02</b><span data-i18n="islServices">услуги</span></a>
+      <a href="/#work" data-sec="work"><b>03</b><span data-i18n="islWork">проекты</span></a>
+      <a href="/#contact" data-sec="contact"><b>04</b><span data-i18n="islContact">контакты</span></a>
+      <button class="isl-kbd" id="paletteKey" type="button" data-i18n-aria-label="palAria" aria-label="команды">⌘k</button>
+    </nav>
     <div class="isl-l isl-toast" id="islToast"><span class="isl-ic" aria-hidden="true"></span><span id="toastText"></span></div>
     <div class="isl-l isl-pal" id="islPal">
       <div class="pal-in">
@@ -44,7 +46,6 @@
 
 <header class="top">
   <a class="brand" href="/" aria-label="kvyvo">
-    <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="3.5"/><path d="M8 2v12M2 8h12"/></svg>
     <span>kvyvo</span>
   </a>
   <div class="top-actions">

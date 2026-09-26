@@ -40,7 +40,8 @@ try {
     for (let y = 0; y < 5000; y += 400) { await page.mouse.wheel(0, 400); await page.waitForTimeout(120); }
     await page.waitForTimeout(900);
     ok(await page.locator('.rv:not(.in)').count() === 0, 'everything arrived after scrolling');
-    ok((await page.textContent('#islSummary')).trim() === 'контакты', 'island names the section in view');
+    ok((await page.getAttribute('#islIdle a.on', 'data-sec')) === 'contact', 'nav marks the section in view');
+    ok(await page.evaluate(() => document.querySelector('.top').classList.contains('gone') && !document.getElementById('island').classList.contains('away')), 'scrolled down: header gone, nav shown');
     await snap(page, 'desktop-light-full', { fullPage: true });
     await page.evaluate(() => scrollTo(0, 0));
     await page.waitForTimeout(600);
@@ -85,11 +86,13 @@ try {
     const { page, ctx, errors } = await open({ width, height: 844 });
     const over = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
     ok(over <= 0, `no horizontal scroll at ${width}px (${over})`);
-    const clash = await page.evaluate(() => {
-      const a = document.querySelector('.brand').getBoundingClientRect(), b = document.getElementById('islShape').getBoundingClientRect(), c = document.querySelector('.top-actions').getBoundingClientRect();
-      return a.right > b.left || b.right > c.left ? [a.right, b.left, b.right, c.left].map(Math.round).join(' ') : false;
-    });
-    ok(!clash, `island doesn't cover the header at ${width}px${clash ? ' (' + clash + ')' : ''}`);
+    ok(await page.evaluate(() => document.getElementById('island').classList.contains('away')), `at the top the nav waits, header shows (${width}px)`);
+    await page.evaluate(() => document.getElementById('services').scrollIntoView());
+    await page.waitForTimeout(900);
+    const fit = await page.evaluate(() => { const r = document.getElementById('islShape').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; });
+    ok(fit, `nav fits the screen at ${width}px`);
+    await page.evaluate(() => scrollTo(0, 0));
+    await page.waitForTimeout(700);
     await snap(page, `phone-${width}`);
     if (width === 390) {
       for (let y = 0; y < 9000; y += 500) { await page.mouse.wheel(0, 500); await page.waitForTimeout(100); }

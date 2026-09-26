@@ -7,7 +7,7 @@
 <meta name="description" content="kvyvo: боты на python, скрипты и парсеры, сайты на html, css и react, дизайн. самозанятый, беру заказы. co-owner ranteis network.">
 <meta name="theme-color" content="#ECEAE4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0E0E0D" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/icon-64.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/icon-180.png">
 <link rel="canonical" href="https://kvyvo.github.io/">
 <meta property="og:type" content="website">
@@ -32,12 +32,14 @@
 <!-- the island: one shape for where-you-are, toasts and the command palette -->
 <dialog id="island" aria-label="kvyvo">
   <div class="isl" id="islShape">
-    <button class="isl-l isl-idle" id="islIdle" type="button">
-      <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="3.5"/><path d="M8 2v12M2 8h12"/></svg>
-      <span class="sw-t" id="islSummary">принимаю заказы</span>
-      <svg class="ring" id="islRing" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" pathLength="100"/><circle id="islRingFg" cx="10" cy="10" r="7.5" pathLength="100"/></svg>
-      <kbd class="isl-kbd" id="paletteKey">⌘k</kbd>
-    </button>
+    <nav class="isl-l isl-idle" id="islIdle" data-i18n-aria-label="navAria" aria-label="разделы">
+      <span class="nav-thumb" id="navThumb" aria-hidden="true"></span>
+      <a href="#about" data-sec="about"><b>01</b><span data-i18n="islAbout">обо мне</span></a>
+      <a href="#services" data-sec="services"><b>02</b><span data-i18n="islServices">услуги</span></a>
+      <a href="#work" data-sec="work"><b>03</b><span data-i18n="islWork">проекты</span></a>
+      <a href="#contact" data-sec="contact"><b>04</b><span data-i18n="islContact">контакты</span></a>
+      <button class="isl-kbd" id="paletteKey" type="button" data-i18n-aria-label="palAria" aria-label="команды">⌘k</button>
+    </nav>
     <div class="isl-l isl-toast" id="islToast"><span class="isl-ic" aria-hidden="true"></span><span id="toastText"></span></div>
     <div class="isl-l isl-pal" id="islPal">
       <div class="pal-in">
@@ -53,7 +55,6 @@
 
 <header class="top">
   <a class="brand" href="./" aria-label="kvyvo">
-    <svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="3.5"/><path d="M8 2v12M2 8h12"/></svg>
     <span>kvyvo</span>
   </a>
   <div class="top-actions">
@@ -67,7 +68,7 @@
     <div class="hero-text">
       <div class="who rv">
         <img class="ava" src="assets/avatar.jpg" width="96" height="96" alt="kvyvo">
-        <div class="who-t"><b>kvyvo</b><span class="status"><i aria-hidden="true"></i><span data-i18n="status">принимаю заказы</span></span></div>
+        <div class="who-t"><b>kvyvo</b></div>
       </div>
       <p class="eyebrow rv" style="--d:40ms" data-i18n="eyebrow">18 лет · самозанятый · python · js · дизайн</p>
       <h1 class="rv" style="--d:80ms" data-i18n="heroTitle">боты, парсеры и сайты</h1>
@@ -104,7 +105,7 @@
         <p data-i18n="aTaxX">официально, нпд в рф. на каждый заказ — чек.</p>
       </article>
       <article class="card b-ran dark rv" style="--d:60ms">
-        <span class="glyph"><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8 13 3.8V8c0 3-2.2 5-5 6.2C5.2 13 3 11 3 8V3.8z"/><path d="M8 5v3.5M8 10.8v.2"/></svg></span>
+        <img class="logo" src="assets/ranteis.svg" width="44" height="44" alt="ranteis network">
         <h3 data-i18n="aRanT">ranteis network</h3>
         <p data-i18n="aRanX">co-owner впн-сервиса. сайт и бот в telegram.</p>
         <div class="btnrow">
@@ -224,12 +225,12 @@
       </article>
     </div>
     <article class="card ranteis rv" id="p-ranteis">
-      <div class="card-head"><span class="num">5</span><span class="name">ranteis network</span><span class="chip" data-i18n="rTag">co-owner</span></div>
+      <div class="card-head"><img class="logo sm" src="assets/ranteis.svg" width="26" height="26" alt=""><span class="name">ranteis network</span><span class="chip" data-i18n="rTag">co-owner</span></div>
       <h3 data-i18n="rTitle">впн-сервис ranteis network</h3>
       <p data-i18n="rText">совладелец сервиса. подключение и управление — через бота в telegram.</p>
       <div class="btnrow">
-        <a class="btn primary big" href="https://ranteis.one"><span data-i18n="rSite">сайт</span> · ranteis.one<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
-        <a class="btn secondary big" href="https://t.me/RanteisNetworkBot"><span data-i18n="rBot">бот в telegram</span></a>
+        <a class="btn primary big" href="https://ranteis.one">ranteis.one<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+        <a class="btn secondary big" href="https://t.me/RanteisNetworkBot"><span data-i18n="rBot">бот в telegram</span><svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
       </div>
     </article>
     <div class="stats rv">

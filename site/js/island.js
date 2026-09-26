@@ -1,8 +1,8 @@
 // The island from kalka, in a smaller role: one black shape at the top of the page.
-// Idle it names the section you're in and rings with scroll progress; it becomes the
+// Idle it is the section nav (01 02 03 04) and appears once the header has scrolled away; it becomes the
 // ⌘K palette and short toasts. It is a <dialog>: non-modal normally, modal for the palette.
 import { SPRING } from './spring.js';
-import { Springs, morph, swap } from './motion.js';
+import { Springs, morph } from './motion.js';
 import { t } from './i18n.js';
 
 const $ = (id) => document.getElementById(id);
@@ -25,29 +25,43 @@ export function createIsland({ commands }) {
     toast: { layer: $('islToast') },
     palette: { layer: $('islPal'), radius: 22, light: 1, width: () => Math.min(520, innerWidth - 24) },
   });
-  let timer = null;
+  let timer = null, away = false;
 
   const modal = (on) => {
     if (dlg.open && dlg.matches(':modal') === on) return;
     if (dlg.open) dlg.close();
     on ? dlg.showModal() : dlg.show();
   };
-  const go = (state) => { clearTimeout(timer); m.to(state); };
+  const go = (state) => { clearTimeout(timer); dlg.classList.toggle('away', away && state === 'idle'); m.to(state); };
   function idle() { modal(false); go('idle'); }
   dlg.addEventListener('cancel', (e) => { e.preventDefault(); idle(); });
   dlg.addEventListener('click', (e) => { if (e.target === dlg) idle(); });
-  $('islIdle').addEventListener('click', () => palette());
-
-  /* ---------- summary: where you are, how far down ---------- */
-  const ring = $('islRingFg');
-  function summary(text) {
-    swap($('islSummary'), text);
-    if (m.state === 'idle') m.to('idle'); // width follows the new text
+  /* ---------- sections: 01 02 03 04, a pill slides under the one in view ---------- */
+  const nav = $('islIdle'), thumb = $('navThumb'), links = [...nav.querySelectorAll('a[data-sec]')];
+  let current = null;
+  const th = new Springs({ x: 0, w: 0, o: 0 }, ({ x, w, o }) => {
+    thumb.style.transform = `translateX(${x}px)`;
+    thumb.style.width = `${Math.max(0, w)}px`;
+    thumb.style.opacity = o;
+  });
+  function place(animated = true) {
+    const a = links.find((l) => l.dataset.sec === current);
+    const v = a ? { x: a.offsetLeft, w: a.offsetWidth, o: 1 } : { o: 0 };
+    animated ? th.to(v, { x: SPRING.snappy, w: SPRING.snappy, o: SPRING.quick }) : th.set(v);
   }
-  function progress(f) {
-    ring.style.strokeDasharray = `${Math.max(0, Math.min(1, f)) * 100} 100`;
-    ring.style.opacity = f > 0.005 ? 1 : 0; // a zero-length dash with round caps would still draw a dot
-    $('islRing').classList.toggle('full', f > 0.995);
+  function section(id) {
+    if (id === current) return;
+    current = id;
+    links.forEach((l) => l.classList.toggle('on', l.dataset.sec === id));
+    if (m.state === 'idle') m.to('idle'); // labels that don't fit collapse to numbers: width follows
+    requestAnimationFrame(() => place());
+  }
+  new ResizeObserver(() => place(false)).observe(nav);
+  $('paletteKey').addEventListener('click', () => palette());
+  /** At the top of the page the header is there; the island waits above the screen. */
+  function hide(on) {
+    away = on;
+    dlg.classList.toggle('away', on && m.state === 'idle');
   }
 
   /* ---------- toast ---------- */
@@ -122,5 +136,5 @@ export function createIsland({ commands }) {
 
   dlg.show();
   m.to('idle');
-  return { summary, progress, toast, palette, idle, get state() { return m.state; } };
+  return { section, hide, toast, palette, idle, get state() { return m.state; } };
 }

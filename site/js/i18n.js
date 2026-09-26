@@ -5,7 +5,6 @@ const RU = {
   description: 'kvyvo: боты на python, скрипты и парсеры, сайты на html, css и react, дизайн. самозанятый, беру заказы. co-owner ranteis network.',
   langBtn: 'en',
   langAria: 'switch to english',
-  status: 'принимаю заказы',
   eyebrow: '18 лет · самозанятый · python · js · дизайн',
   heroTitle: 'боты, парсеры и сайты',
   heroLead: 'пишу на python и js, делаю дизайн в photoshop и after effects. беру заказы как самозанятый, с чеком. co-owner впн-сервиса ranteis network.',
@@ -88,7 +87,7 @@ const RU = {
 
   foot: 'kvyvo — открытый код, mit.',
   footNote: 'сайт без сборки и фреймворков, как kalka.',
-  islTop: 'принимаю заказы',
+  navAria: 'разделы',
   islAbout: 'обо мне',
   islServices: 'услуги',
   islWork: 'проекты',
@@ -119,7 +118,6 @@ const EN = {
   description: 'kvyvo: python bots, scripts and scrapers, websites in html, css and react, design. self-employed, open for orders. co-owner of ranteis network.',
   langBtn: 'ru',
   langAria: 'переключить на русский',
-  status: 'open for orders',
   eyebrow: '18 · self-employed · python · js · design',
   heroTitle: 'bots, scrapers and websites',
   heroLead: 'i write python and js, and design in photoshop and after effects. i take orders as a registered self-employed, with a receipt. co-owner of the ranteis network vpn.',
@@ -202,7 +200,7 @@ const EN = {
 
   foot: 'kvyvo — open source, mit.',
   footNote: 'no build step and no framework, same as kalka.',
-  islTop: 'open for orders',
+  navAria: 'sections',
   islAbout: 'about',
   islServices: 'services',
   islWork: 'work',

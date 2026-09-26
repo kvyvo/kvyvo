@@ -14,9 +14,8 @@ apply();
 
 const pic = $('heroSvg') ? hero($('heroSvg'), $('heroCap')) : null;
 
-/* ---------- the island: section name, scroll ring, ⌘K ---------- */
-const SECTIONS = [['top', 'islTop'], ['about', 'islAbout'], ['services', 'islServices'], ['work', 'islWork'], ['contact', 'islContact']].filter(([id]) => $(id));
-let section = SECTIONS[0]?.[1] ?? 'islTop';
+/* ---------- the island: section nav, ⌘k ---------- */
+const SECTIONS = [['about', 'islAbout'], ['services', 'islServices'], ['work', 'islWork'], ['contact', 'islContact']].filter(([id]) => $(id));
 const THEME_NEXT = { auto: 'dark', dark: 'light', light: 'auto' };
 const THEME_LABEL = { auto: 'themeAuto', dark: 'themeDark', light: 'themeLight' };
 const jump = (id) => $(id)?.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth' });
@@ -36,34 +35,31 @@ const commands = () => [
   { title: t('cmdOpenKalka'), run: () => open(KALKA) },
   ...PROJECTS.map(({ id }) => ({ title: t('cmdRepo', { name: id }), run: () => open(`${GH}/${id}`) })),
   { title: t('cmdProfile'), run: () => open(GH) },
-  ...SECTIONS.slice(1).map(([id, key]) => ({ title: t('cmdGo', { name: t(key) }), run: () => jump(id) })),
+  ...SECTIONS.map(([id, key]) => ({ title: t('cmdGo', { name: t(key) }), run: () => jump(id) })),
   { title: t('cmdLang'), run: () => { switchLang(); return t('toastLang'); } },
   { title: t('cmdTheme', { mode: t(THEME_LABEL[THEME_NEXT[getTheme()]]) }), run: () => t('cmdTheme', { mode: t(THEME_LABEL[nextTheme()]) }) },
 ];
 const island = createIsland({ commands });
 $('paletteKey').textContent = MAC ? '⌘k' : 'ctrl k';
-island.summary(t(document.body.dataset.page === '404' ? 'nfEyebrow' : section));
 
 if (SECTIONS.length) {
   const io = new IntersectionObserver((entries) => {
-    for (const e of entries) {
-      if (!e.isIntersecting) continue;
-      section = SECTIONS.find(([id]) => id === e.target.id)[1];
-      island.summary(t(section));
-    }
+    for (const e of entries) if (e.isIntersecting) island.section(e.target.id);
   }, { rootMargin: '-40% 0px -55% 0px' });
   SECTIONS.forEach(([id]) => io.observe($(id)));
+  new IntersectionObserver(([e]) => e.isIntersecting && island.section(null), { rootMargin: '-40% 0px -55% 0px' }).observe($('top'));
 }
 
+// the header lives at the top; scroll down and it slides away, the section nav takes its place
 let rafScroll = 0;
+const top = document.querySelector('.top');
 const onScroll = () => {
   rafScroll = 0;
-  const max = document.documentElement.scrollHeight - innerHeight;
-  island.progress(max > 0 ? scrollY / max : 1);
-  document.querySelector('.top').classList.toggle('scrolled', scrollY > 4);
+  const past = scrollY > 80;
+  top.classList.toggle('gone', past);
+  island.hide(!past);
 };
 addEventListener('scroll', () => { rafScroll ||= requestAnimationFrame(onScroll); }, { passive: true });
-addEventListener('resize', onScroll, { passive: true });
 onScroll();
 
 addEventListener('keydown', (e) => {
@@ -74,7 +70,6 @@ addEventListener('keydown', (e) => {
 function switchLang() {
   setLang(getLang() === 'ru' ? 'en' : 'ru');
   pic?.relabel();
-  island.summary(t(document.body.dataset.page === '404' ? 'nfEyebrow' : section));
 }
 $('langBtn').addEventListener('click', () => { switchLang(); island.toast(t('toastLang')); });
 document.querySelectorAll('[data-copy=discord]').forEach((b) => b.addEventListener('click', async () => island.toast(await copyDiscord())));

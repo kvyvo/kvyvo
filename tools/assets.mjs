@@ -1,4 +1,4 @@
-// Renders PNG icons from site/assets/icon.svg and the kalka screenshots for the project card.
+// Renders PNG icons from site/assets/avatar.jpg and the kalka screenshots for the project card.
 // Kalka's screenshots come from a kalka checkout next to this one: KALKA=../kalka node tools/assets.mjs
 import { chromium } from 'playwright';
 import { readFile } from 'node:fs/promises';
@@ -9,11 +9,13 @@ const kalka = resolve(process.env.KALKA || '../kalka');
 const b = await chromium.launch();
 const p = await b.newPage();
 
-const icon = await readFile(out('icon.svg'), 'utf8');
-for (const s of [180, 192, 512]) {
-  await p.setViewportSize({ width: s, height: s });
-  await p.setContent(`<body style="margin:0">${icon.replace('<svg ', `<svg width="${s}" height="${s}" `)}</body>`);
-  await p.screenshot({ path: out(`icon-${s}.png`), omitBackground: true });
+// icons are the avatar: round for the tab, square for the home screen (ios rounds it itself)
+const ava = (await readFile(out('avatar.jpg'))).toString('base64');
+for (const [size, round] of [[64, true], [180, false], [192, true], [512, true]]) {
+  await p.setViewportSize({ width: size, height: size });
+  await p.setContent(`<body style="margin:0"><img src="data:image/jpeg;base64,${ava}" style="width:${size}px;height:${size}px;object-fit:cover;display:block;border-radius:${round ? '50%' : '0'}"></body>`);
+  await p.waitForFunction(() => document.images[0].complete);
+  await p.screenshot({ path: out(`icon-${size}.png`), omitBackground: true });
 }
 
 // 2880 × 1800 → 1600 × 1000 JPEG
