@@ -82,7 +82,7 @@ const RU = {
   secContact: '04 — контакты',
   contactTitle: 'есть задача? напиши.',
   contactLead: 'удобнее всего — telegram. расскажи, что нужно, и к какому сроку.',
-  copyDiscord: 'discord · kvyvo',
+  copyDiscord: 'discord · kvyvo.',
   copied: 'ник discord скопирован',
 
   foot: 'kvyvo — открытый код, mit.',
@@ -195,7 +195,7 @@ const EN = {
   secContact: '04 — contact',
   contactTitle: 'got a task? message me.',
   contactLead: 'telegram is the easiest. tell me what you need and by when.',
-  copyDiscord: 'discord · kvyvo',
+  copyDiscord: 'discord · kvyvo.',
   copied: 'discord handle copied',
 
   foot: 'kvyvo — open source, mit.',

@@ -23,7 +23,7 @@ const open = (url) => { location.href = url; };
 const LINKS = { telegram: 'https://t.me/kvyvo', instagram: 'https://www.instagram.com/kvyvo_', ranteis: 'https://ranteis.one' };
 
 async function copyDiscord() {
-  try { await navigator.clipboard.writeText('kvyvo'); } catch { /* no clipboard: the handle is on screen anyway */ }
+  try { await navigator.clipboard.writeText('kvyvo.'); } catch { /* no clipboard: the handle is on screen anyway */ }
   return t('copied');
 }
 
@@ -42,15 +42,8 @@ const commands = () => [
 const island = createIsland({ commands });
 $('paletteKey').textContent = MAC ? '⌘k' : 'ctrl k';
 
-if (SECTIONS.length) {
-  const io = new IntersectionObserver((entries) => {
-    for (const e of entries) if (e.isIntersecting) island.section(e.target.id);
-  }, { rootMargin: '-40% 0px -55% 0px' });
-  SECTIONS.forEach(([id]) => io.observe($(id)));
-  new IntersectionObserver(([e]) => e.isIntersecting && island.section(null), { rootMargin: '-40% 0px -55% 0px' }).observe($('top'));
-}
-
-// the header lives at the top; scroll down and it slides away, the section nav takes its place
+// the header lives at the top; scroll down and it slides away, the section nav takes its place.
+// the section in view is the last one whose top has passed 45% of the screen; at the very bottom it's the last one.
 let rafScroll = 0;
 const top = document.querySelector('.top');
 const onScroll = () => {
@@ -58,8 +51,31 @@ const onScroll = () => {
   const past = scrollY > 80;
   top.classList.toggle('gone', past);
   island.hide(!past);
+  if (!SECTIONS.length) return;
+  const atEnd = scrollY + innerHeight >= document.documentElement.scrollHeight - 4;
+  let cur = null;
+  for (const [id] of SECTIONS) if ($(id).getBoundingClientRect().top <= innerHeight * 0.45) cur = id;
+  island.section(atEnd ? SECTIONS.at(-1)[0] : cur);
 };
 addEventListener('scroll', () => { rafScroll ||= requestAnimationFrame(onScroll); }, { passive: true });
+
+// one section per screen. css scroll-snap pulls a gentle wheel or trackpad scroll back where it started,
+// so the page settles itself: when scrolling stops near a section's start, it glides the rest of the way.
+// inside a section taller than the screen nothing happens.
+if (SECTIONS.length) {
+  const stops = () => [0, ...SECTIONS.map(([id]) => $(id).getBoundingClientRect().top + scrollY)];
+  let idle = 0, settling = false;
+  const settle = () => {
+    if (settling) { settling = false; return; }
+    if (island.state === 'palette') return;
+    const near = stops().map((y) => y - scrollY).filter((d) => Math.abs(d) > 2 && Math.abs(d) < innerHeight * 0.22);
+    if (!near.length) return;
+    const d = near.sort((a, b) => Math.abs(a) - Math.abs(b))[0];
+    settling = true;
+    scrollBy({ top: d, behavior: reduced() ? 'auto' : 'smooth' });
+  };
+  addEventListener('scroll', () => { clearTimeout(idle); idle = setTimeout(settle, 160); }, { passive: true });
+}
 onScroll();
 
 addEventListener('keydown', (e) => {

@@ -9,7 +9,7 @@
 
 боты, парсеры и сайты. мне 18, учусь в колледже и беру заказы как самозанятый, с чеком. пишу на python и js, дизайн делаю в photoshop и after effects. co-owner впн-сервиса [ranteis network](https://ranteis.one).
 
-**[kvyvo.github.io →](https://kvyvo.github.io/)** · [telegram](https://t.me/kvyvo) · [instagram](https://www.instagram.com/kvyvo_) · discord: `kvyvo` · [english below](#english)
+**[kvyvo.github.io →](https://kvyvo.github.io/)** · [telegram](https://t.me/kvyvo) · [instagram](https://www.instagram.com/kvyvo_) · discord: `kvyvo.` · [english below](#english)
 
 ## что могу сделать
 
@@ -52,4 +52,4 @@ npm run shots     # картинки для readme и og-превью с нас�
 - **[whoami-bot](https://github.com/kvyvo/whoami-bot)** — what telegram tells a bot about you
 - **[books-scraper](https://github.com/kvyvo/books-scraper)** — 1,000 books from books.toscrape.com into one excel sheet
 
-contact: [telegram](https://t.me/kvyvo) · [instagram](https://www.instagram.com/kvyvo_) · discord `kvyvo`
+contact: [telegram](https://t.me/kvyvo) · [instagram](https://www.instagram.com/kvyvo_) · discord `kvyvo.`
